@@ -11,7 +11,7 @@ import (
 
 	"github.com/crossplane/upjet/pkg/pipeline"
 
-	"github.com/upbound/upjet-provider-template/config"
+	"github.com/mindstorms6/provider-cloudflare-upjet/config"
 )
 
 func main() {

@@ -1,4 +1,4 @@
-module github.com/upbound/upjet-provider-template
+module github.com/mindstorms6/provider-cloudflare-upjet
 
 go 1.21
 

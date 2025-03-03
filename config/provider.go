@@ -10,12 +10,13 @@ import (
 
 	ujconfig "github.com/crossplane/upjet/pkg/config"
 
-	"github.com/upbound/upjet-provider-template/config/null"
+	"github.com/mindstorms6/provider-cloudflare-upjet/config/branch"
+	"github.com/mindstorms6/provider-cloudflare-upjet/config/repository"
 )
 
 const (
-	resourcePrefix = "template"
-	modulePath     = "github.com/upbound/upjet-provider-template"
+	resourcePrefix = "cloudflare-upjet"
+	modulePath     = "github.com/mindstorms6/provider-cloudflare-upjet"
 )
 
 //go:embed schema.json
@@ -27,7 +28,7 @@ var providerMetadata string
 // GetProvider returns provider configuration
 func GetProvider() *ujconfig.Provider {
 	pc := ujconfig.NewProvider([]byte(providerSchema), resourcePrefix, modulePath, []byte(providerMetadata),
-		ujconfig.WithRootGroup("template.upbound.io"),
+		ujconfig.WithRootGroup("cloudflare.crossplane.io"),
 		ujconfig.WithIncludeList(ExternalNameConfigured()),
 		ujconfig.WithFeaturesPackage("internal/features"),
 		ujconfig.WithDefaultResourceOptions(
@@ -36,7 +37,8 @@ func GetProvider() *ujconfig.Provider {
 
 	for _, configure := range []func(provider *ujconfig.Provider){
 		// add custom config functions
-		null.Configure,
+		repository.Configure,
+		branch.Configure,
 	} {
 		configure(pc)
 	}
