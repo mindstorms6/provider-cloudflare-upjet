@@ -1,0 +1,53 @@
+apiVersion: zero.cloudflare.crossplane.io/v1alpha1
+kind: TrustGatewaySettings
+metadata:
+  annotations:
+    meta.upbound.io/example-id: zero/v1alpha1/trustgatewaysettings
+  labels:
+    testing.upbound.io/example-name: example_zero_trust_gateway_settings
+  name: example-zero-trust-gateway-settings
+spec:
+  forProvider:
+    accountId: 699d98642c564d2e855e9661899b7252
+    settings:
+      activityLog:
+        enabled: true
+      antivirus:
+        enabledDownloadPhase: false
+        enabledUploadPhase: false
+        failClosed: false
+        notificationSettings:
+          enabled: true
+          msg: msg
+          supportUrl: support_url
+      blockPage:
+        backgroundColor: background_color
+        enabled: true
+        footerText: --footer--
+        headerText: --header--
+        logoPath: https://logos.com/a.png
+        mailtoAddress: admin@example.com
+        mailtoSubject: Blocked User Inquiry
+        name: Cloudflare
+        suppressFooter: false
+      bodyScanning:
+        inspectionMode: deep
+      browserIsolation:
+        nonIdentityEnabled: true
+        urlBrowserIsolationEnabled: true
+      certificate:
+        id: d1b364c5-1311-466e-a194-f0e943e0799f
+      customCertificate:
+        enabled: true
+        id: d1b364c5-1311-466e-a194-f0e943e0799f
+      extendedEmailMatching:
+        enabled: true
+      fips:
+        tls: true
+      protocolDetection:
+        enabled: true
+      sandbox:
+        enabled: true
+        fallbackAction: allow
+      tlsDecrypt:
+        enabled: true

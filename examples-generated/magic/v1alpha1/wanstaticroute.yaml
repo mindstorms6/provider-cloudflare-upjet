@@ -1,0 +1,11 @@
+apiVersion: magic.cloudflare.crossplane.io/v1alpha1
+kind: WanStaticRoute
+metadata:
+  annotations:
+    meta.upbound.io/example-id: magic/v1alpha1/wanstaticroute
+  labels:
+    testing.upbound.io/example-name: example_magic_wan_static_route
+  name: example-magic-wan-static-route
+spec:
+  forProvider:
+    accountId: 023e105f4ecef8ad9ca31a8372d0c353

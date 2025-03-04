@@ -1,0 +1,30 @@
+apiVersion: zero.cloudflare.crossplane.io/v1alpha1
+kind: TrustDeviceCustomProfile
+metadata:
+  annotations:
+    meta.upbound.io/example-id: zero/v1alpha1/trustdevicecustomprofile
+  labels:
+    testing.upbound.io/example-name: example_zero_trust_device_custom_profile
+  name: example-zero-trust-device-custom-profile
+spec:
+  forProvider:
+    accountId: 699d98642c564d2e855e9661899b7252
+    allowModeSwitch: true
+    allowUpdates: true
+    allowedToLeave: true
+    autoConnect: 0
+    captivePortal: 180
+    description: Policy for test teams.
+    disableAutoFallback: true
+    enabled: true
+    excludeOfficeIps: true
+    lanAllowMinutes: 30
+    lanAllowSubnetSize: 24
+    match: user.identity == "test@cloudflare.com"
+    precedence: 100
+    serviceModeV2:
+      mode: proxy
+      port: 3000
+    supportUrl: https://1.1.1.1/help
+    switchLocked: true
+    tunnelProtocol: wireguard

@@ -7,6 +7,8 @@ package config
 import (
 	// Note(turkenh): we are importing this to embed provider schema document
 	_ "embed"
+	"fmt"
+	"strings"
 
 	ujconfig "github.com/crossplane/upjet/pkg/config"
 
@@ -29,11 +31,24 @@ var providerMetadata string
 func GetProvider() *ujconfig.Provider {
 	pc := ujconfig.NewProvider([]byte(providerSchema), resourcePrefix, modulePath, []byte(providerMetadata),
 		ujconfig.WithRootGroup("cloudflare.crossplane.io"),
-		ujconfig.WithIncludeList(ExternalNameConfigured()),
+		// ujconfig.WithIncludeList(ExternalNameConfigured()),
 		ujconfig.WithFeaturesPackage("internal/features"),
+
+		// have to use a custom branch currently
+		ujconfig.WithSkipList([]string{"map"}),
 		ujconfig.WithDefaultResourceOptions(
 			ExternalNameConfigurations(),
-		))
+		),
+	)
+
+	println(fmt.Sprintf("RG: %s", pc.RootGroup))
+	for name, resource := range pc.Resources {
+		group := pc.RootGroup
+		if resource.ShortGroup != "" {
+			group = strings.ToLower(resource.ShortGroup) + "." + pc.RootGroup
+		}
+		println(fmt.Sprintf("%s:%s", group, name))
+	}
 
 	for _, configure := range []func(provider *ujconfig.Provider){
 		// add custom config functions
@@ -42,7 +57,6 @@ func GetProvider() *ujconfig.Provider {
 	} {
 		configure(pc)
 	}
-
 	pc.ConfigureResources()
 	return pc
 }

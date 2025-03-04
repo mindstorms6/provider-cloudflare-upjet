@@ -1,0 +1,26 @@
+apiVersion: list.cloudflare.crossplane.io/v1alpha1
+kind: Item
+metadata:
+  annotations:
+    meta.upbound.io/example-id: list/v1alpha1/item
+  labels:
+    testing.upbound.io/example-name: example_list_item
+  name: example-list-item
+spec:
+  forProvider:
+    accountId: 023e105f4ecef8ad9ca31a8372d0c353
+    body:
+    - asn: 5567
+      comment: Private IP address
+      hostname:
+        url_hostname: example.com
+      ip: 10.0.0.1
+      redirect:
+        include_subdomains: true
+        preserve_path_suffix: true
+        preserve_query_string: true
+        source_url: example.com/arch
+        status_code: 301
+        subpath_matching: true
+        target_url: https://archlinux.org/
+    listId: 2c0fc9fa937b11eaa1b71c4d701ab86e

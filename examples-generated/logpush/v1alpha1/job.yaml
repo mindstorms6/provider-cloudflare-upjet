@@ -1,0 +1,37 @@
+apiVersion: logpush.cloudflare.crossplane.io/v1alpha1
+kind: Job
+metadata:
+  annotations:
+    meta.upbound.io/example-id: logpush/v1alpha1/job
+  labels:
+    testing.upbound.io/example-name: example_logpush_job
+  name: example-logpush-job
+spec:
+  forProvider:
+    dataset: http_requests
+    destinationConf: s3://mybucket/logs?region=us-west-2
+    enabled: false
+    frequency: high
+    kind: edge
+    logpullOptions: fields=RayID,ClientIP,EdgeStartTimestamp&timestamps=rfc3339
+    maxUploadBytes: 5000000
+    maxUploadIntervalSeconds: 30
+    maxUploadRecords: 1000
+    outputOptions:
+      batchPrefix: batch_prefix
+      batchSuffix: batch_suffix
+      cve20214428: true
+      fieldDelimiter: field_delimiter
+      fieldNames:
+      - ClientIP
+      - EdgeStartTimestamp
+      - RayID
+      outputType: ndjson
+      recordDelimiter: record_delimiter
+      recordPrefix: record_prefix
+      recordSuffix: record_suffix
+      recordTemplate: record_template
+      sampleRate: 0
+      timestampFormat: unixnano
+    ownershipChallenge: "00000000000000000000"
+    zoneId: zone_id

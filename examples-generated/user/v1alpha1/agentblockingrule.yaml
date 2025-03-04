@@ -1,0 +1,15 @@
+apiVersion: user.cloudflare.crossplane.io/v1alpha1
+kind: AgentBlockingRule
+metadata:
+  annotations:
+    meta.upbound.io/example-id: user/v1alpha1/agentblockingrule
+  labels:
+    testing.upbound.io/example-name: example_user_agent_blocking_rule
+  name: example-user-agent-blocking-rule
+spec:
+  forProvider:
+    configuration:
+      target: ip
+      value: 198.51.100.4
+    mode: block
+    zoneId: 023e105f4ecef8ad9ca31a8372d0c353

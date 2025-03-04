@@ -1,0 +1,16 @@
+apiVersion: cloudflare.cloudflare.crossplane.io/v1alpha1
+kind: Snippets
+metadata:
+  annotations:
+    meta.upbound.io/example-id: cloudflare/v1alpha1/snippets
+  labels:
+    testing.upbound.io/example-name: example_snippets
+  name: example-snippets
+spec:
+  forProvider:
+    files: export { async function fetch(request, env) {return new Response('some_response')
+      } }
+    metadata:
+      mainModule: main.js
+    snippetName: snippet_name_01
+    zoneId: 023e105f4ecef8ad9ca31a8372d0c353

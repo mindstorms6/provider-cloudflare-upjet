@@ -1,0 +1,23 @@
+apiVersion: zero.cloudflare.crossplane.io/v1alpha1
+kind: TrustDexTest
+metadata:
+  annotations:
+    meta.upbound.io/example-id: zero/v1alpha1/trustdextest
+  labels:
+    testing.upbound.io/example-name: example_zero_trust_dex_test
+  name: example-zero-trust-dex-test
+spec:
+  forProvider:
+    accountId: 699d98642c564d2e855e9661899b7252
+    data:
+      host: https://dash.cloudflare.com
+      kind: http
+      method: GET
+    description: Checks the dash endpoint every 30 minutes
+    enabled: true
+    interval: 30m
+    targetPolicies:
+    - default: true
+      id: id
+      name: name
+    targeted: true

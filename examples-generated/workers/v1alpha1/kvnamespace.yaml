@@ -1,0 +1,12 @@
+apiVersion: workers.cloudflare.crossplane.io/v1alpha1
+kind: KvNamespace
+metadata:
+  annotations:
+    meta.upbound.io/example-id: workers/v1alpha1/kvnamespace
+  labels:
+    testing.upbound.io/example-name: example_workers_kv_namespace
+  name: example-workers-kv-namespace
+spec:
+  forProvider:
+    accountId: 023e105f4ecef8ad9ca31a8372d0c353
+    title: My Own Namespace

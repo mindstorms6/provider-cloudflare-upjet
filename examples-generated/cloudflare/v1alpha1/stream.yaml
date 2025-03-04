@@ -1,0 +1,11 @@
+apiVersion: cloudflare.cloudflare.crossplane.io/v1alpha1
+kind: Stream
+metadata:
+  annotations:
+    meta.upbound.io/example-id: cloudflare/v1alpha1/stream
+  labels:
+    testing.upbound.io/example-name: example_stream
+  name: example-stream
+spec:
+  forProvider:
+    accountId: 023e105f4ecef8ad9ca31a8372d0c353

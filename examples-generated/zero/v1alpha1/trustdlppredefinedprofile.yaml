@@ -1,0 +1,23 @@
+apiVersion: zero.cloudflare.crossplane.io/v1alpha1
+kind: TrustDlpPredefinedProfile
+metadata:
+  annotations:
+    meta.upbound.io/example-id: zero/v1alpha1/trustdlppredefinedprofile
+  labels:
+    testing.upbound.io/example-name: example_zero_trust_dlp_predefined_profile
+  name: example-zero-trust-dlp-predefined-profile
+spec:
+  forProvider:
+    accountId: account_id
+    aiContextEnabled: true
+    allowedMatchCount: 0
+    confidenceThreshold: confidence_threshold
+    contextAwareness:
+      enabled: true
+      skip:
+        files: true
+    entries:
+    - enabled: true
+      id: 182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e
+    ocrEnabled: true
+    profileId: 182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e

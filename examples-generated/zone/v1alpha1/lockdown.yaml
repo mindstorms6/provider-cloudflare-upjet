@@ -1,0 +1,16 @@
+apiVersion: zone.cloudflare.crossplane.io/v1alpha1
+kind: Lockdown
+metadata:
+  annotations:
+    meta.upbound.io/example-id: zone/v1alpha1/lockdown
+  labels:
+    testing.upbound.io/example-name: example_zone_lockdown
+  name: example-zone-lockdown
+spec:
+  forProvider:
+    configurations:
+    - target: ip
+      value: 198.51.100.4
+    urls:
+    - shop.example.com/*
+    zoneId: 023e105f4ecef8ad9ca31a8372d0c353

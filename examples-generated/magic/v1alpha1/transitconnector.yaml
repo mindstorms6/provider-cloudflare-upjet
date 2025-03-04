@@ -1,0 +1,17 @@
+apiVersion: magic.cloudflare.crossplane.io/v1alpha1
+kind: TransitConnector
+metadata:
+  annotations:
+    meta.upbound.io/example-id: magic/v1alpha1/transitconnector
+  labels:
+    testing.upbound.io/example-name: example_magic_transit_connector
+  name: example-magic-transit-connector
+spec:
+  forProvider:
+    accountId: 023e105f4ecef8ad9ca31a8372d0c353
+    activated: true
+    connectorId: connector_id
+    interruptWindowDurationHours: 0
+    interruptWindowHourOfDay: 0
+    notes: notes
+    timezone: timezone

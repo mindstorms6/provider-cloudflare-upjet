@@ -1,0 +1,14 @@
+apiVersion: api.cloudflare.crossplane.io/v1alpha1
+kind: ShieldSchema
+metadata:
+  annotations:
+    meta.upbound.io/example-id: api/v1alpha1/shieldschema
+  labels:
+    testing.upbound.io/example-name: example_api_shield_schema
+  name: example-api-shield-schema
+spec:
+  forProvider:
+    file: file.txt
+    kind: openapi_v3
+    validationEnabled: "true"
+    zoneId: 023e105f4ecef8ad9ca31a8372d0c353

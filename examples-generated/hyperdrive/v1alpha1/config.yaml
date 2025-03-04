@@ -1,0 +1,20 @@
+apiVersion: hyperdrive.cloudflare.crossplane.io/v1alpha1
+kind: Config
+metadata:
+  annotations:
+    meta.upbound.io/example-id: hyperdrive/v1alpha1/config
+  labels:
+    testing.upbound.io/example-name: example_hyperdrive_config
+  name: example-hyperdrive-config
+spec:
+  forProvider:
+    accountId: 023e105f4ecef8ad9ca31a8372d0c353
+    caching:
+      disabled: true
+    origin:
+      database: postgres
+      host: database.example.com
+      password: password
+      port: 5432
+      scheme: postgres
+      user: postgres

@@ -1,0 +1,12 @@
+apiVersion: zero.cloudflare.crossplane.io/v1alpha1
+kind: TrustAccessServiceToken
+metadata:
+  annotations:
+    meta.upbound.io/example-id: zero/v1alpha1/trustaccessservicetoken
+  labels:
+    testing.upbound.io/example-name: example_zero_trust_access_service_token
+  name: example-zero-trust-access-service-token
+spec:
+  forProvider:
+    duration: 60m
+    zoneId: zone_id

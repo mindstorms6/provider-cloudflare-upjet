@@ -1,0 +1,12 @@
+apiVersion: pages.cloudflare.crossplane.io/v1alpha1
+kind: Domain
+metadata:
+  annotations:
+    meta.upbound.io/example-id: pages/v1alpha1/domain
+  labels:
+    testing.upbound.io/example-name: example_pages_domain
+  name: example-pages-domain
+spec:
+  forProvider:
+    accountId: 023e105f4ecef8ad9ca31a8372d0c353
+    projectName: this-is-my-project-01

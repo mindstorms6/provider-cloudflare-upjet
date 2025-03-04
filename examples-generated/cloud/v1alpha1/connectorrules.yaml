@@ -1,0 +1,19 @@
+apiVersion: cloud.cloudflare.crossplane.io/v1alpha1
+kind: ConnectorRules
+metadata:
+  annotations:
+    meta.upbound.io/example-id: cloud/v1alpha1/connectorrules
+  labels:
+    testing.upbound.io/example-name: example_cloud_connector_rules
+  name: example-cloud-connector-rules
+spec:
+  forProvider:
+    rules:
+    - cloudProvider: aws_s3
+      description: Rule description
+      enabled: true
+      expression: http.cookie eq "a=b"
+      id: 95c365e17e1b46599cd99e5b231fac4e
+      parameters:
+        host: examplebucket.s3.eu-north-1.amazonaws.com
+    zoneId: 023e105f4ecef8ad9ca31a8372d0c353

@@ -1,0 +1,24 @@
+apiVersion: magic.cloudflare.crossplane.io/v1alpha1
+kind: WanIpsecTunnel
+metadata:
+  annotations:
+    meta.upbound.io/example-id: magic/v1alpha1/wanipsectunnel
+  labels:
+    testing.upbound.io/example-name: example_magic_wan_ipsec_tunnel
+  name: example-magic-wan-ipsec-tunnel
+spec:
+  forProvider:
+    accountId: 023e105f4ecef8ad9ca31a8372d0c353
+    cloudflareEndpoint: 203.0.113.1
+    customerEndpoint: 203.0.113.1
+    description: Tunnel for ISP X
+    healthCheck:
+      direction: unidirectional
+      enabled: true
+      rate: low
+      target:
+        saved: 203.0.113.1
+      type: reply
+    interfaceAddress: 192.0.2.0/31
+    psk: O3bwKSjnaoCxDoUxjcq4Rk8ZKkezQUiy
+    replayProtection: false

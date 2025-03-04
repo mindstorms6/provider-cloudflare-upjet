@@ -1,0 +1,21 @@
+apiVersion: dns.cloudflare.crossplane.io/v1alpha1
+kind: Record
+metadata:
+  annotations:
+    meta.upbound.io/example-id: dns/v1alpha1/record
+  labels:
+    testing.upbound.io/example-name: example_dns_record
+  name: example-dns-record
+spec:
+  forProvider:
+    comment: Domain verification record
+    content: 198.51.100.4
+    proxied: true
+    settings:
+      ipv4Only: true
+      ipv6Only: true
+    tags:
+    - owner:dns-team
+    ttl: 3600
+    type: A
+    zoneId: 023e105f4ecef8ad9ca31a8372d0c353

@@ -1,0 +1,13 @@
+apiVersion: notification.cloudflare.crossplane.io/v1alpha1
+kind: PolicyWebhooks
+metadata:
+  annotations:
+    meta.upbound.io/example-id: notification/v1alpha1/policywebhooks
+  labels:
+    testing.upbound.io/example-name: example_notification_policy_webhooks
+  name: example-notification-policy-webhooks
+spec:
+  forProvider:
+    accountId: 023e105f4ecef8ad9ca31a8372d0c353
+    secret: secret
+    url: https://hooks.slack.com/services/Ds3fdBFbV/456464Gdd
