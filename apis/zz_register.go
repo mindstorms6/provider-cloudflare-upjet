@@ -12,7 +12,6 @@ import (
 
 	v1alpha1 "github.com/mindstorms6/provider-cloudflare-upjet/apis/access/v1alpha1"
 	v1alpha1account "github.com/mindstorms6/provider-cloudflare-upjet/apis/account/v1alpha1"
-	v1alpha1address "github.com/mindstorms6/provider-cloudflare-upjet/apis/address/v1alpha1"
 	v1alpha1api "github.com/mindstorms6/provider-cloudflare-upjet/apis/api/v1alpha1"
 	v1alpha1argo "github.com/mindstorms6/provider-cloudflare-upjet/apis/argo/v1alpha1"
 	v1alpha1authenticated "github.com/mindstorms6/provider-cloudflare-upjet/apis/authenticated/v1alpha1"
@@ -74,7 +73,6 @@ func init() {
 	AddToSchemes = append(AddToSchemes,
 		v1alpha1.SchemeBuilder.AddToScheme,
 		v1alpha1account.SchemeBuilder.AddToScheme,
-		v1alpha1address.SchemeBuilder.AddToScheme,
 		v1alpha1api.SchemeBuilder.AddToScheme,
 		v1alpha1argo.SchemeBuilder.AddToScheme,
 		v1alpha1authenticated.SchemeBuilder.AddToScheme,

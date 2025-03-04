@@ -1,0 +1,2351 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: projects.pages.cloudflare.crossplane.io
+spec:
+  group: pages.cloudflare.crossplane.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - cloudflare-upjet
+    kind: Project
+    listKind: ProjectList
+    plural: projects
+    singular: project
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Project is the Schema for the Projects API.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ProjectSpec defines the desired state of Project
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: |-
+                  DeletionPolicy specifies what will happen to the underlying external
+                  when this managed resource is deleted - either "Delete" or "Orphan" the
+                  external resource.
+                  This field is planned to be deprecated in favor of the ManagementPolicies
+                  field in a future release. Currently, both could be set independently and
+                  non-default values would be honored if the feature flag is enabled.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                properties:
+                  accountId:
+                    description: |-
+                      (String) Identifier
+                      Identifier
+                    type: string
+                  buildConfig:
+                    description: (Attributes) Configs for the project build process.
+                      (see below for nested schema)
+                    properties:
+                      buildCaching:
+                        description: |-
+                          (Boolean) Enable build caching for the project.
+                          Enable build caching for the project.
+                        type: boolean
+                      buildCommand:
+                        description: |-
+                          (String) Command used to build project.
+                          Command used to build project.
+                        type: string
+                      destinationDir:
+                        description: |-
+                          (String) Output directory of the build.
+                          Output directory of the build.
+                        type: string
+                      rootDir:
+                        description: |-
+                          (String) Directory to run the command.
+                          Directory to run the command.
+                        type: string
+                      webAnalyticsTag:
+                        description: |-
+                          (String) The classifying tag for analytics.
+                          The classifying tag for analytics.
+                        type: string
+                      webAnalyticsToken:
+                        description: |-
+                          (String) The auth token for analytics.
+                          The auth token for analytics.
+                        type: string
+                    type: object
+                  canonicalDeployment:
+                    description: (Attributes) Most recent deployment to the repo.
+                      (see below for nested schema)
+                    properties:
+                      buildConfig:
+                        description: (Attributes) Configs for the project build process.
+                          (see below for nested schema)
+                        type: object
+                      deploymentTrigger:
+                        description: (Attributes) Info about what caused the deployment.
+                          (see below for nested schema)
+                        properties:
+                          metadata:
+                            description: (Attributes) Additional info about the trigger.
+                              (see below for nested schema)
+                            type: object
+                        type: object
+                      envVars:
+                        additionalProperties:
+                          type: object
+                        description: (Attributes Map) Environment variables for build
+                          configs. (see below for nested schema)
+                        type: object
+                      latestStage:
+                        description: (Attributes) The status of the deployment. (see
+                          below for nested schema)
+                        type: object
+                      source:
+                        description: (Attributes) (see below for nested schema)
+                        properties:
+                          config:
+                            description: (Attributes) (see below for nested schema)
+                            type: object
+                        type: object
+                      stages:
+                        description: (Attributes List) List of past stages. (see below
+                          for nested schema)
+                        items:
+                          type: object
+                        type: array
+                    type: object
+                  deploymentConfigs:
+                    description: (Attributes) Configs for deployments in a project.
+                      (see below for nested schema)
+                    properties:
+                      preview:
+                        description: (Attributes) Configs for preview deploys. (see
+                          below for nested schema)
+                        properties:
+                          aiBindings:
+                            additionalProperties:
+                              properties:
+                                projectId:
+                                  description: (String)
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Constellation bindings used
+                              for Pages Functions. (see below for nested schema)
+                            type: object
+                          analyticsEngineDatasets:
+                            additionalProperties:
+                              properties:
+                                dataset:
+                                  description: |-
+                                    (String) Name of the dataset.
+                                    Name of the dataset.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Analytics Engine bindings
+                              used for Pages Functions. (see below for nested schema)
+                            type: object
+                          browsers:
+                            additionalProperties:
+                              type: object
+                            description: (Attributes Map) Browser bindings used for
+                              Pages Functions. (see below for nested schema)
+                            type: object
+                          compatibilityDate:
+                            description: |-
+                              (String) Compatibility date used for Pages Functions.
+                              Compatibility date used for Pages Functions.
+                            type: string
+                          compatibilityFlags:
+                            description: |-
+                              (List of String) Compatibility flags used for Pages Functions.
+                              Compatibility flags used for Pages Functions.
+                            items:
+                              type: string
+                            type: array
+                          d1Databases:
+                            additionalProperties:
+                              properties:
+                                id:
+                                  description: |-
+                                    (String) Name of the project.
+                                    UUID of the D1 database.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) D1 databases used for Pages
+                              Functions. (see below for nested schema)
+                            type: object
+                          durableObjectNamespaces:
+                            additionalProperties:
+                              properties:
+                                namespaceId:
+                                  description: |-
+                                    (String) ID of the Durabble Object namespace.
+                                    ID of the Durabble Object namespace.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Durabble Object namespaces
+                              used for Pages Functions. (see below for nested schema)
+                            type: object
+                          envVars:
+                            additionalProperties:
+                              properties:
+                                type:
+                                  description: |-
+                                    (String) The type of environment variable.
+                                    The type of environment variable.
+                                  type: string
+                                value:
+                                  description: |-
+                                    (String) Environment variable value.
+                                    Environment variable value.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Environment variables for
+                              build configs. (see below for nested schema)
+                            type: object
+                          hyperdriveBindings:
+                            additionalProperties:
+                              properties:
+                                id:
+                                  description: (String) Name of the project.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Hyperdrive bindings used
+                              for Pages Functions. (see below for nested schema)
+                            type: object
+                          kvNamespaces:
+                            additionalProperties:
+                              properties:
+                                namespaceId:
+                                  description: |-
+                                    (String) ID of the Durabble Object namespace.
+                                    ID of the KV namespace.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) KV namespaces used for Pages
+                              Functions. (see below for nested schema)
+                            type: object
+                          mtlsCertificates:
+                            additionalProperties:
+                              properties:
+                                certificateId:
+                                  description: (String)
+                                  type: string
+                              type: object
+                            description: (Attributes Map) mTLS bindings used for Pages
+                              Functions. (see below for nested schema)
+                            type: object
+                          placement:
+                            description: (Attributes) Placement setting used for Pages
+                              Functions. (see below for nested schema)
+                            properties:
+                              mode:
+                                description: |-
+                                  (String) Placement mode.
+                                  Placement mode.
+                                type: string
+                            type: object
+                          queueProducers:
+                            additionalProperties:
+                              properties:
+                                name:
+                                  description: |-
+                                    (String) Name of the project.
+                                    Name of the Queue.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Queue Producer bindings
+                              used for Pages Functions. (see below for nested schema)
+                            type: object
+                          r2Buckets:
+                            additionalProperties:
+                              properties:
+                                jurisdiction:
+                                  description: |-
+                                    (String) Jurisdiction of the R2 bucket.
+                                    Jurisdiction of the R2 bucket.
+                                  type: string
+                                name:
+                                  description: |-
+                                    (String) Name of the project.
+                                    Name of the R2 bucket.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) R2 buckets used for Pages
+                              Functions. (see below for nested schema)
+                            type: object
+                          services:
+                            additionalProperties:
+                              properties:
+                                entrypoint:
+                                  description: |-
+                                    (String) The entrypoint to bind to.
+                                    The entrypoint to bind to.
+                                  type: string
+                                environment:
+                                  description: |-
+                                    (String) The Service environment.
+                                    The Service environment.
+                                  type: string
+                                service:
+                                  description: |-
+                                    (String) The Service name.
+                                    The Service name.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Services used for Pages
+                              Functions. (see below for nested schema)
+                            type: object
+                          vectorizeBindings:
+                            additionalProperties:
+                              properties:
+                                indexName:
+                                  description: (String)
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Vectorize bindings used
+                              for Pages Functions. (see below for nested schema)
+                            type: object
+                        type: object
+                      production:
+                        description: (Attributes) Configs for production deploys.
+                          (see below for nested schema)
+                        properties:
+                          aiBindings:
+                            additionalProperties:
+                              properties:
+                                projectId:
+                                  description: (String)
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Constellation bindings used
+                              for Pages Functions. (see below for nested schema)
+                            type: object
+                          analyticsEngineDatasets:
+                            additionalProperties:
+                              properties:
+                                dataset:
+                                  description: |-
+                                    (String) Name of the dataset.
+                                    Name of the dataset.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Analytics Engine bindings
+                              used for Pages Functions. (see below for nested schema)
+                            type: object
+                          browsers:
+                            additionalProperties:
+                              type: object
+                            description: (Attributes Map) Browser bindings used for
+                              Pages Functions. (see below for nested schema)
+                            type: object
+                          compatibilityDate:
+                            description: |-
+                              (String) Compatibility date used for Pages Functions.
+                              Compatibility date used for Pages Functions.
+                            type: string
+                          compatibilityFlags:
+                            description: |-
+                              (List of String) Compatibility flags used for Pages Functions.
+                              Compatibility flags used for Pages Functions.
+                            items:
+                              type: string
+                            type: array
+                          d1Databases:
+                            additionalProperties:
+                              properties:
+                                id:
+                                  description: |-
+                                    (String) Name of the project.
+                                    UUID of the D1 database.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) D1 databases used for Pages
+                              Functions. (see below for nested schema)
+                            type: object
+                          durableObjectNamespaces:
+                            additionalProperties:
+                              properties:
+                                namespaceId:
+                                  description: |-
+                                    (String) ID of the Durabble Object namespace.
+                                    ID of the Durabble Object namespace.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Durabble Object namespaces
+                              used for Pages Functions. (see below for nested schema)
+                            type: object
+                          envVars:
+                            additionalProperties:
+                              properties:
+                                type:
+                                  description: |-
+                                    (String) The type of environment variable.
+                                    The type of environment variable.
+                                  type: string
+                                value:
+                                  description: |-
+                                    (String) Environment variable value.
+                                    Environment variable value.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Environment variables for
+                              build configs. (see below for nested schema)
+                            type: object
+                          hyperdriveBindings:
+                            additionalProperties:
+                              properties:
+                                id:
+                                  description: (String) Name of the project.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Hyperdrive bindings used
+                              for Pages Functions. (see below for nested schema)
+                            type: object
+                          kvNamespaces:
+                            additionalProperties:
+                              properties:
+                                namespaceId:
+                                  description: |-
+                                    (String) ID of the Durabble Object namespace.
+                                    ID of the KV namespace.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) KV namespaces used for Pages
+                              Functions. (see below for nested schema)
+                            type: object
+                          mtlsCertificates:
+                            additionalProperties:
+                              properties:
+                                certificateId:
+                                  description: (String)
+                                  type: string
+                              type: object
+                            description: (Attributes Map) mTLS bindings used for Pages
+                              Functions. (see below for nested schema)
+                            type: object
+                          placement:
+                            description: (Attributes) Placement setting used for Pages
+                              Functions. (see below for nested schema)
+                            properties:
+                              mode:
+                                description: |-
+                                  (String) Placement mode.
+                                  Placement mode.
+                                type: string
+                            type: object
+                          queueProducers:
+                            additionalProperties:
+                              properties:
+                                name:
+                                  description: |-
+                                    (String) Name of the project.
+                                    Name of the Queue.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Queue Producer bindings
+                              used for Pages Functions. (see below for nested schema)
+                            type: object
+                          r2Buckets:
+                            additionalProperties:
+                              properties:
+                                jurisdiction:
+                                  description: |-
+                                    (String) Jurisdiction of the R2 bucket.
+                                    Jurisdiction of the R2 bucket.
+                                  type: string
+                                name:
+                                  description: |-
+                                    (String) Name of the project.
+                                    Name of the R2 bucket.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) R2 buckets used for Pages
+                              Functions. (see below for nested schema)
+                            type: object
+                          services:
+                            additionalProperties:
+                              properties:
+                                entrypoint:
+                                  description: |-
+                                    (String) The entrypoint to bind to.
+                                    The entrypoint to bind to.
+                                  type: string
+                                environment:
+                                  description: |-
+                                    (String) The Service environment.
+                                    The Service environment.
+                                  type: string
+                                service:
+                                  description: |-
+                                    (String) The Service name.
+                                    The Service name.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Services used for Pages
+                              Functions. (see below for nested schema)
+                            type: object
+                          vectorizeBindings:
+                            additionalProperties:
+                              properties:
+                                indexName:
+                                  description: (String)
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Vectorize bindings used
+                              for Pages Functions. (see below for nested schema)
+                            type: object
+                        type: object
+                    type: object
+                  latestDeployment:
+                    description: (Attributes) Most recent deployment to the repo.
+                      (see below for nested schema)
+                    properties:
+                      buildConfig:
+                        description: (Attributes) Configs for the project build process.
+                          (see below for nested schema)
+                        type: object
+                      deploymentTrigger:
+                        description: (Attributes) Info about what caused the deployment.
+                          (see below for nested schema)
+                        properties:
+                          metadata:
+                            description: (Attributes) Additional info about the trigger.
+                              (see below for nested schema)
+                            type: object
+                        type: object
+                      envVars:
+                        additionalProperties:
+                          type: object
+                        description: (Attributes Map) Environment variables for build
+                          configs. (see below for nested schema)
+                        type: object
+                      latestStage:
+                        description: (Attributes) The status of the deployment. (see
+                          below for nested schema)
+                        type: object
+                      source:
+                        description: (Attributes) (see below for nested schema)
+                        properties:
+                          config:
+                            description: (Attributes) (see below for nested schema)
+                            type: object
+                        type: object
+                      stages:
+                        description: (Attributes List) List of past stages. (see below
+                          for nested schema)
+                        items:
+                          type: object
+                        type: array
+                    type: object
+                  productionBranch:
+                    description: |-
+                      (String) Production branch of the project. Used to identify production deployments.
+                      Production branch of the project. Used to identify production deployments.
+                    type: string
+                  source:
+                    description: (Attributes) (see below for nested schema)
+                    properties:
+                      config:
+                        description: (Attributes) (see below for nested schema)
+                        type: object
+                    type: object
+                type: object
+              initProvider:
+                description: |-
+                  THIS IS A BETA FIELD. It will be honored
+                  unless the Management Policies feature flag is disabled.
+                  InitProvider holds the same fields as ForProvider, with the exception
+                  of Identifier and other resource reference fields. The fields that are
+                  in InitProvider are merged into ForProvider when the resource is created.
+                  The same fields are also added to the terraform ignore_changes hook, to
+                  avoid updating them after creation. This is useful for fields that are
+                  required on creation, but we do not desire to update them after creation,
+                  for example because of an external controller is managing them, like an
+                  autoscaler.
+                properties:
+                  accountId:
+                    description: |-
+                      (String) Identifier
+                      Identifier
+                    type: string
+                  buildConfig:
+                    description: (Attributes) Configs for the project build process.
+                      (see below for nested schema)
+                    properties:
+                      buildCaching:
+                        description: |-
+                          (Boolean) Enable build caching for the project.
+                          Enable build caching for the project.
+                        type: boolean
+                      buildCommand:
+                        description: |-
+                          (String) Command used to build project.
+                          Command used to build project.
+                        type: string
+                      destinationDir:
+                        description: |-
+                          (String) Output directory of the build.
+                          Output directory of the build.
+                        type: string
+                      rootDir:
+                        description: |-
+                          (String) Directory to run the command.
+                          Directory to run the command.
+                        type: string
+                      webAnalyticsTag:
+                        description: |-
+                          (String) The classifying tag for analytics.
+                          The classifying tag for analytics.
+                        type: string
+                      webAnalyticsToken:
+                        description: |-
+                          (String) The auth token for analytics.
+                          The auth token for analytics.
+                        type: string
+                    type: object
+                  canonicalDeployment:
+                    description: (Attributes) Most recent deployment to the repo.
+                      (see below for nested schema)
+                    properties:
+                      buildConfig:
+                        description: (Attributes) Configs for the project build process.
+                          (see below for nested schema)
+                        type: object
+                      deploymentTrigger:
+                        description: (Attributes) Info about what caused the deployment.
+                          (see below for nested schema)
+                        properties:
+                          metadata:
+                            description: (Attributes) Additional info about the trigger.
+                              (see below for nested schema)
+                            type: object
+                        type: object
+                      envVars:
+                        additionalProperties:
+                          type: object
+                        description: (Attributes Map) Environment variables for build
+                          configs. (see below for nested schema)
+                        type: object
+                      latestStage:
+                        description: (Attributes) The status of the deployment. (see
+                          below for nested schema)
+                        type: object
+                      source:
+                        description: (Attributes) (see below for nested schema)
+                        properties:
+                          config:
+                            description: (Attributes) (see below for nested schema)
+                            type: object
+                        type: object
+                      stages:
+                        description: (Attributes List) List of past stages. (see below
+                          for nested schema)
+                        items:
+                          type: object
+                        type: array
+                    type: object
+                  deploymentConfigs:
+                    description: (Attributes) Configs for deployments in a project.
+                      (see below for nested schema)
+                    properties:
+                      preview:
+                        description: (Attributes) Configs for preview deploys. (see
+                          below for nested schema)
+                        properties:
+                          aiBindings:
+                            additionalProperties:
+                              properties:
+                                projectId:
+                                  description: (String)
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Constellation bindings used
+                              for Pages Functions. (see below for nested schema)
+                            type: object
+                          analyticsEngineDatasets:
+                            additionalProperties:
+                              properties:
+                                dataset:
+                                  description: |-
+                                    (String) Name of the dataset.
+                                    Name of the dataset.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Analytics Engine bindings
+                              used for Pages Functions. (see below for nested schema)
+                            type: object
+                          browsers:
+                            additionalProperties:
+                              type: object
+                            description: (Attributes Map) Browser bindings used for
+                              Pages Functions. (see below for nested schema)
+                            type: object
+                          compatibilityDate:
+                            description: |-
+                              (String) Compatibility date used for Pages Functions.
+                              Compatibility date used for Pages Functions.
+                            type: string
+                          compatibilityFlags:
+                            description: |-
+                              (List of String) Compatibility flags used for Pages Functions.
+                              Compatibility flags used for Pages Functions.
+                            items:
+                              type: string
+                            type: array
+                          d1Databases:
+                            additionalProperties:
+                              properties:
+                                id:
+                                  description: |-
+                                    (String) Name of the project.
+                                    UUID of the D1 database.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) D1 databases used for Pages
+                              Functions. (see below for nested schema)
+                            type: object
+                          durableObjectNamespaces:
+                            additionalProperties:
+                              properties:
+                                namespaceId:
+                                  description: |-
+                                    (String) ID of the Durabble Object namespace.
+                                    ID of the Durabble Object namespace.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Durabble Object namespaces
+                              used for Pages Functions. (see below for nested schema)
+                            type: object
+                          envVars:
+                            additionalProperties:
+                              properties:
+                                type:
+                                  description: |-
+                                    (String) The type of environment variable.
+                                    The type of environment variable.
+                                  type: string
+                                value:
+                                  description: |-
+                                    (String) Environment variable value.
+                                    Environment variable value.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Environment variables for
+                              build configs. (see below for nested schema)
+                            type: object
+                          hyperdriveBindings:
+                            additionalProperties:
+                              properties:
+                                id:
+                                  description: (String) Name of the project.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Hyperdrive bindings used
+                              for Pages Functions. (see below for nested schema)
+                            type: object
+                          kvNamespaces:
+                            additionalProperties:
+                              properties:
+                                namespaceId:
+                                  description: |-
+                                    (String) ID of the Durabble Object namespace.
+                                    ID of the KV namespace.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) KV namespaces used for Pages
+                              Functions. (see below for nested schema)
+                            type: object
+                          mtlsCertificates:
+                            additionalProperties:
+                              properties:
+                                certificateId:
+                                  description: (String)
+                                  type: string
+                              type: object
+                            description: (Attributes Map) mTLS bindings used for Pages
+                              Functions. (see below for nested schema)
+                            type: object
+                          placement:
+                            description: (Attributes) Placement setting used for Pages
+                              Functions. (see below for nested schema)
+                            properties:
+                              mode:
+                                description: |-
+                                  (String) Placement mode.
+                                  Placement mode.
+                                type: string
+                            type: object
+                          queueProducers:
+                            additionalProperties:
+                              properties:
+                                name:
+                                  description: |-
+                                    (String) Name of the project.
+                                    Name of the Queue.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Queue Producer bindings
+                              used for Pages Functions. (see below for nested schema)
+                            type: object
+                          r2Buckets:
+                            additionalProperties:
+                              properties:
+                                jurisdiction:
+                                  description: |-
+                                    (String) Jurisdiction of the R2 bucket.
+                                    Jurisdiction of the R2 bucket.
+                                  type: string
+                                name:
+                                  description: |-
+                                    (String) Name of the project.
+                                    Name of the R2 bucket.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) R2 buckets used for Pages
+                              Functions. (see below for nested schema)
+                            type: object
+                          services:
+                            additionalProperties:
+                              properties:
+                                entrypoint:
+                                  description: |-
+                                    (String) The entrypoint to bind to.
+                                    The entrypoint to bind to.
+                                  type: string
+                                environment:
+                                  description: |-
+                                    (String) The Service environment.
+                                    The Service environment.
+                                  type: string
+                                service:
+                                  description: |-
+                                    (String) The Service name.
+                                    The Service name.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Services used for Pages
+                              Functions. (see below for nested schema)
+                            type: object
+                          vectorizeBindings:
+                            additionalProperties:
+                              properties:
+                                indexName:
+                                  description: (String)
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Vectorize bindings used
+                              for Pages Functions. (see below for nested schema)
+                            type: object
+                        type: object
+                      production:
+                        description: (Attributes) Configs for production deploys.
+                          (see below for nested schema)
+                        properties:
+                          aiBindings:
+                            additionalProperties:
+                              properties:
+                                projectId:
+                                  description: (String)
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Constellation bindings used
+                              for Pages Functions. (see below for nested schema)
+                            type: object
+                          analyticsEngineDatasets:
+                            additionalProperties:
+                              properties:
+                                dataset:
+                                  description: |-
+                                    (String) Name of the dataset.
+                                    Name of the dataset.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Analytics Engine bindings
+                              used for Pages Functions. (see below for nested schema)
+                            type: object
+                          browsers:
+                            additionalProperties:
+                              type: object
+                            description: (Attributes Map) Browser bindings used for
+                              Pages Functions. (see below for nested schema)
+                            type: object
+                          compatibilityDate:
+                            description: |-
+                              (String) Compatibility date used for Pages Functions.
+                              Compatibility date used for Pages Functions.
+                            type: string
+                          compatibilityFlags:
+                            description: |-
+                              (List of String) Compatibility flags used for Pages Functions.
+                              Compatibility flags used for Pages Functions.
+                            items:
+                              type: string
+                            type: array
+                          d1Databases:
+                            additionalProperties:
+                              properties:
+                                id:
+                                  description: |-
+                                    (String) Name of the project.
+                                    UUID of the D1 database.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) D1 databases used for Pages
+                              Functions. (see below for nested schema)
+                            type: object
+                          durableObjectNamespaces:
+                            additionalProperties:
+                              properties:
+                                namespaceId:
+                                  description: |-
+                                    (String) ID of the Durabble Object namespace.
+                                    ID of the Durabble Object namespace.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Durabble Object namespaces
+                              used for Pages Functions. (see below for nested schema)
+                            type: object
+                          envVars:
+                            additionalProperties:
+                              properties:
+                                type:
+                                  description: |-
+                                    (String) The type of environment variable.
+                                    The type of environment variable.
+                                  type: string
+                                value:
+                                  description: |-
+                                    (String) Environment variable value.
+                                    Environment variable value.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Environment variables for
+                              build configs. (see below for nested schema)
+                            type: object
+                          hyperdriveBindings:
+                            additionalProperties:
+                              properties:
+                                id:
+                                  description: (String) Name of the project.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Hyperdrive bindings used
+                              for Pages Functions. (see below for nested schema)
+                            type: object
+                          kvNamespaces:
+                            additionalProperties:
+                              properties:
+                                namespaceId:
+                                  description: |-
+                                    (String) ID of the Durabble Object namespace.
+                                    ID of the KV namespace.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) KV namespaces used for Pages
+                              Functions. (see below for nested schema)
+                            type: object
+                          mtlsCertificates:
+                            additionalProperties:
+                              properties:
+                                certificateId:
+                                  description: (String)
+                                  type: string
+                              type: object
+                            description: (Attributes Map) mTLS bindings used for Pages
+                              Functions. (see below for nested schema)
+                            type: object
+                          placement:
+                            description: (Attributes) Placement setting used for Pages
+                              Functions. (see below for nested schema)
+                            properties:
+                              mode:
+                                description: |-
+                                  (String) Placement mode.
+                                  Placement mode.
+                                type: string
+                            type: object
+                          queueProducers:
+                            additionalProperties:
+                              properties:
+                                name:
+                                  description: |-
+                                    (String) Name of the project.
+                                    Name of the Queue.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Queue Producer bindings
+                              used for Pages Functions. (see below for nested schema)
+                            type: object
+                          r2Buckets:
+                            additionalProperties:
+                              properties:
+                                jurisdiction:
+                                  description: |-
+                                    (String) Jurisdiction of the R2 bucket.
+                                    Jurisdiction of the R2 bucket.
+                                  type: string
+                                name:
+                                  description: |-
+                                    (String) Name of the project.
+                                    Name of the R2 bucket.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) R2 buckets used for Pages
+                              Functions. (see below for nested schema)
+                            type: object
+                          services:
+                            additionalProperties:
+                              properties:
+                                entrypoint:
+                                  description: |-
+                                    (String) The entrypoint to bind to.
+                                    The entrypoint to bind to.
+                                  type: string
+                                environment:
+                                  description: |-
+                                    (String) The Service environment.
+                                    The Service environment.
+                                  type: string
+                                service:
+                                  description: |-
+                                    (String) The Service name.
+                                    The Service name.
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Services used for Pages
+                              Functions. (see below for nested schema)
+                            type: object
+                          vectorizeBindings:
+                            additionalProperties:
+                              properties:
+                                indexName:
+                                  description: (String)
+                                  type: string
+                              type: object
+                            description: (Attributes Map) Vectorize bindings used
+                              for Pages Functions. (see below for nested schema)
+                            type: object
+                        type: object
+                    type: object
+                  latestDeployment:
+                    description: (Attributes) Most recent deployment to the repo.
+                      (see below for nested schema)
+                    properties:
+                      buildConfig:
+                        description: (Attributes) Configs for the project build process.
+                          (see below for nested schema)
+                        type: object
+                      deploymentTrigger:
+                        description: (Attributes) Info about what caused the deployment.
+                          (see below for nested schema)
+                        properties:
+                          metadata:
+                            description: (Attributes) Additional info about the trigger.
+                              (see below for nested schema)
+                            type: object
+                        type: object
+                      envVars:
+                        additionalProperties:
+                          type: object
+                        description: (Attributes Map) Environment variables for build
+                          configs. (see below for nested schema)
+                        type: object
+                      latestStage:
+                        description: (Attributes) The status of the deployment. (see
+                          below for nested schema)
+                        type: object
+                      source:
+                        description: (Attributes) (see below for nested schema)
+                        properties:
+                          config:
+                            description: (Attributes) (see below for nested schema)
+                            type: object
+                        type: object
+                      stages:
+                        description: (Attributes List) List of past stages. (see below
+                          for nested schema)
+                        items:
+                          type: object
+                        type: array
+                    type: object
+                  productionBranch:
+                    description: |-
+                      (String) Production branch of the project. Used to identify production deployments.
+                      Production branch of the project. Used to identify production deployments.
+                    type: string
+                  source:
+                    description: (Attributes) (see below for nested schema)
+                    properties:
+                      config:
+                        description: (Attributes) (see below for nested schema)
+                        type: object
+                    type: object
+                type: object
+              managementPolicies:
+                default:
+                - '*'
+                description: |-
+                  THIS IS A BETA FIELD. It is on by default but can be opted out
+                  through a Crossplane feature flag.
+                  ManagementPolicies specify the array of actions Crossplane is allowed to
+                  take on the managed and external resources.
+                  This field is planned to replace the DeletionPolicy field in a future
+                  release. Currently, both could be set independently and non-default
+                  values would be honored if the feature flag is enabled. If both are
+                  custom, the DeletionPolicy field will be ignored.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                  and this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md
+                items:
+                  description: |-
+                    A ManagementAction represents an action that the Crossplane controllers
+                    can take on an external resource.
+                  enum:
+                  - Observe
+                  - Create
+                  - Update
+                  - Delete
+                  - LateInitialize
+                  - '*'
+                  type: string
+                type: array
+              providerConfigRef:
+                default:
+                  name: default
+                description: |-
+                  ProviderConfigReference specifies how the provider that will be used to
+                  create, observe, update, and delete this managed resource should be
+                  configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                  policy:
+                    description: Policies for referencing.
+                    properties:
+                      resolution:
+                        default: Required
+                        description: |-
+                          Resolution specifies whether resolution of this reference is required.
+                          The default is 'Required', which means the reconcile will fail if the
+                          reference cannot be resolved. 'Optional' means this reference will be
+                          a no-op if it cannot be resolved.
+                        enum:
+                        - Required
+                        - Optional
+                        type: string
+                      resolve:
+                        description: |-
+                          Resolve specifies when this reference should be resolved. The default
+                          is 'IfNotPresent', which will attempt to resolve the reference only when
+                          the corresponding field is not present. Use 'Always' to resolve the
+                          reference on every reconcile.
+                        enum:
+                        - Always
+                        - IfNotPresent
+                        type: string
+                    type: object
+                required:
+                - name
+                type: object
+              publishConnectionDetailsTo:
+                description: |-
+                  PublishConnectionDetailsTo specifies the connection secret config which
+                  contains a name, metadata and a reference to secret store config to
+                  which any connection details for this managed resource should be written.
+                  Connection details frequently include the endpoint, username,
+                  and password required to connect to the managed resource.
+                properties:
+                  configRef:
+                    default:
+                      name: default
+                    description: |-
+                      SecretStoreConfigRef specifies which secret store config should be used
+                      for this ConnectionSecret.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  metadata:
+                    description: Metadata is the metadata for connection secret.
+                    properties:
+                      annotations:
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          Annotations are the annotations to be added to connection secret.
+                          - For Kubernetes secrets, this will be used as "metadata.annotations".
+                          - It is up to Secret Store implementation for others store types.
+                        type: object
+                      labels:
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          Labels are the labels/tags to be added to connection secret.
+                          - For Kubernetes secrets, this will be used as "metadata.labels".
+                          - It is up to Secret Store implementation for others store types.
+                        type: object
+                      type:
+                        description: |-
+                          Type is the SecretType for the connection secret.
+                          - Only valid for Kubernetes Secret Stores.
+                        type: string
+                    type: object
+                  name:
+                    description: Name is the name of the connection secret.
+                    type: string
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: |-
+                  WriteConnectionSecretToReference specifies the namespace and name of a
+                  Secret to which any connection details for this managed resource should
+                  be written. Connection details frequently include the endpoint, username,
+                  and password required to connect to the managed resource.
+                  This field is planned to be replaced in a future release in favor of
+                  PublishConnectionDetailsTo. Currently, both could be set independently
+                  and connection details would be published to both without affecting
+                  each other.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+            x-kubernetes-validations:
+            - message: spec.forProvider.accountId is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.accountId)
+                || (has(self.initProvider) && has(self.initProvider.accountId))'
+          status:
+            description: ProjectStatus defines the observed state of Project.
+            properties:
+              atProvider:
+                properties:
+                  accountId:
+                    description: |-
+                      (String) Identifier
+                      Identifier
+                    type: string
+                  buildConfig:
+                    description: (Attributes) Configs for the project build process.
+                      (see below for nested schema)
+                    properties:
+                      buildCaching:
+                        description: |-
+                          (Boolean) Enable build caching for the project.
+                          Enable build caching for the project.
+                        type: boolean
+                      buildCommand:
+                        description: |-
+                          (String) Command used to build project.
+                          Command used to build project.
+                        type: string
+                      destinationDir:
+                        description: |-
+                          (String) Output directory of the build.
+                          Output directory of the build.
+                        type: string
+                      rootDir:
+                        description: |-
+                          (String) Directory to run the command.
+                          Directory to run the command.
+                        type: string
+                      webAnalyticsTag:
+                        description: |-
+                          (String) The classifying tag for analytics.
+                          The classifying tag for analytics.
+                        type: string
+                      webAnalyticsToken:
+                        description: |-
+                          (String) The auth token for analytics.
+                          The auth token for analytics.
+                        type: string
+                    type: object
+                  canonicalDeployment:
+                    description: (Attributes) Most recent deployment to the repo.
+                      (see below for nested schema)
+                    properties:
+                      aliases:
+                        description: |-
+                          (List of String) A list of alias URLs pointing to this deployment.
+                          A list of alias URLs pointing to this deployment.
+                        items:
+                          type: string
+                        type: array
+                      buildConfig:
+                        description: (Attributes) Configs for the project build process.
+                          (see below for nested schema)
+                        properties:
+                          buildCaching:
+                            description: |-
+                              (Boolean) Enable build caching for the project.
+                              Enable build caching for the project.
+                            type: boolean
+                          buildCommand:
+                            description: |-
+                              (String) Command used to build project.
+                              Command used to build project.
+                            type: string
+                          destinationDir:
+                            description: |-
+                              (String) Output directory of the build.
+                              Output directory of the build.
+                            type: string
+                          rootDir:
+                            description: |-
+                              (String) Directory to run the command.
+                              Directory to run the command.
+                            type: string
+                          webAnalyticsTag:
+                            description: |-
+                              (String) The classifying tag for analytics.
+                              The classifying tag for analytics.
+                            type: string
+                          webAnalyticsToken:
+                            description: |-
+                              (String) The auth token for analytics.
+                              The auth token for analytics.
+                            type: string
+                        type: object
+                      createdOn:
+                        description: |-
+                          (String) When the project was created.
+                          When the deployment was created.
+                        type: string
+                      deploymentTrigger:
+                        description: (Attributes) Info about what caused the deployment.
+                          (see below for nested schema)
+                        properties:
+                          metadata:
+                            description: (Attributes) Additional info about the trigger.
+                              (see below for nested schema)
+                            properties:
+                              branch:
+                                description: |-
+                                  (String) Where the trigger happened.
+                                  Where the trigger happened.
+                                type: string
+                              commitHash:
+                                description: |-
+                                  (String) Hash of the deployment trigger commit.
+                                  Hash of the deployment trigger commit.
+                                type: string
+                              commitMessage:
+                                description: |-
+                                  (String) Message of the deployment trigger commit.
+                                  Message of the deployment trigger commit.
+                                type: string
+                            type: object
+                          type:
+                            description: |-
+                              (String) The type of environment variable.
+                              What caused the deployment.
+                            type: string
+                        type: object
+                      envVars:
+                        description: (Attributes Map) Environment variables for build
+                          configs. (see below for nested schema)
+                        items:
+                          properties:
+                            type:
+                              description: |-
+                                (String) The type of environment variable.
+                                The type of environment variable.
+                              type: string
+                            value:
+                              description: |-
+                                (String) Environment variable value.
+                                Environment variable value.
+                              type: string
+                          type: object
+                        type: array
+                      environment:
+                        description: |-
+                          (String) The Service environment.
+                          Type of deploy.
+                        type: string
+                      id:
+                        description: |-
+                          (String) Name of the project.
+                          Id of the deployment.
+                        type: string
+                      isSkipped:
+                        description: |-
+                          (Boolean) If the deployment has been skipped.
+                          If the deployment has been skipped.
+                        type: boolean
+                      latestStage:
+                        description: (Attributes) The status of the deployment. (see
+                          below for nested schema)
+                        properties:
+                          endedOn:
+                            description: |-
+                              (String) When the stage ended.
+                              When the stage ended.
+                            type: string
+                          name:
+                            description: |-
+                              (String) Name of the project.
+                              The current build stage.
+                            type: string
+                          startedOn:
+                            description: |-
+                              (String) When the stage started.
+                              When the stage started.
+                            type: string
+                          status:
+                            description: |-
+                              (String) State of the current stage.
+                              State of the current stage.
+                            type: string
+                        type: object
+                      modifiedOn:
+                        description: |-
+                          (String) When the deployment was last modified.
+                          When the deployment was last modified.
+                        type: string
+                      projectId:
+                        description: |-
+                          (String)
+                          Id of the project.
+                        type: string
+                      projectName:
+                        description: |-
+                          (String) Name of the project.
+                          Name of the project.
+                        type: string
+                      shortId:
+                        description: |-
+                          (String) Short Id (8 character) of the deployment.
+                          Short Id (8 character) of the deployment.
+                        type: string
+                      source:
+                        description: (Attributes) (see below for nested schema)
+                        properties:
+                          config:
+                            description: (Attributes) (see below for nested schema)
+                            properties:
+                              deploymentsEnabled:
+                                description: (Boolean)
+                                type: boolean
+                              owner:
+                                description: (String)
+                                type: string
+                              pathExcludes:
+                                description: (List of String)
+                                items:
+                                  type: string
+                                type: array
+                              pathIncludes:
+                                description: (List of String)
+                                items:
+                                  type: string
+                                type: array
+                              prCommentsEnabled:
+                                description: (Boolean)
+                                type: boolean
+                              previewBranchExcludes:
+                                description: (List of String)
+                                items:
+                                  type: string
+                                type: array
+                              previewBranchIncludes:
+                                description: (List of String)
+                                items:
+                                  type: string
+                                type: array
+                              previewDeploymentSetting:
+                                description: (String)
+                                type: string
+                              productionBranch:
+                                description: (String) Production branch of the project.
+                                  Used to identify production deployments.
+                                type: string
+                              productionDeploymentsEnabled:
+                                description: (Boolean)
+                                type: boolean
+                              repoName:
+                                description: (String)
+                                type: string
+                            type: object
+                          type:
+                            description: (String) The type of environment variable.
+                            type: string
+                        type: object
+                      stages:
+                        description: (Attributes List) List of past stages. (see below
+                          for nested schema)
+                        items:
+                          properties:
+                            endedOn:
+                              description: |-
+                                (String) When the stage ended.
+                                When the stage ended.
+                              type: string
+                            name:
+                              description: |-
+                                (String) Name of the project.
+                                The current build stage.
+                              type: string
+                            startedOn:
+                              description: |-
+                                (String) When the stage started.
+                                When the stage started.
+                              type: string
+                            status:
+                              description: |-
+                                (String) State of the current stage.
+                                State of the current stage.
+                              type: string
+                          type: object
+                        type: array
+                      url:
+                        description: |-
+                          (String) The live URL to view this deployment.
+                          The live URL to view this deployment.
+                        type: string
+                    type: object
+                  createdOn:
+                    description: |-
+                      (String) When the project was created.
+                      When the project was created.
+                    type: string
+                  deploymentConfigs:
+                    description: (Attributes) Configs for deployments in a project.
+                      (see below for nested schema)
+                    properties:
+                      preview:
+                        description: (Attributes) Configs for preview deploys. (see
+                          below for nested schema)
+                        properties:
+                          aiBindings:
+                            description: (Attributes Map) Constellation bindings used
+                              for Pages Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                projectId:
+                                  description: (String)
+                                  type: string
+                              type: object
+                            type: array
+                          analyticsEngineDatasets:
+                            description: (Attributes Map) Analytics Engine bindings
+                              used for Pages Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                dataset:
+                                  description: |-
+                                    (String) Name of the dataset.
+                                    Name of the dataset.
+                                  type: string
+                              type: object
+                            type: array
+                          browsers:
+                            additionalProperties:
+                              type: object
+                            description: (Attributes Map) Browser bindings used for
+                              Pages Functions. (see below for nested schema)
+                            type: object
+                          compatibilityDate:
+                            description: |-
+                              (String) Compatibility date used for Pages Functions.
+                              Compatibility date used for Pages Functions.
+                            type: string
+                          compatibilityFlags:
+                            description: |-
+                              (List of String) Compatibility flags used for Pages Functions.
+                              Compatibility flags used for Pages Functions.
+                            items:
+                              type: string
+                            type: array
+                          d1Databases:
+                            description: (Attributes Map) D1 databases used for Pages
+                              Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                id:
+                                  description: |-
+                                    (String) Name of the project.
+                                    UUID of the D1 database.
+                                  type: string
+                              type: object
+                            type: array
+                          durableObjectNamespaces:
+                            description: (Attributes Map) Durabble Object namespaces
+                              used for Pages Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                namespaceId:
+                                  description: |-
+                                    (String) ID of the Durabble Object namespace.
+                                    ID of the Durabble Object namespace.
+                                  type: string
+                              type: object
+                            type: array
+                          envVars:
+                            description: (Attributes Map) Environment variables for
+                              build configs. (see below for nested schema)
+                            items:
+                              properties:
+                                type:
+                                  description: |-
+                                    (String) The type of environment variable.
+                                    The type of environment variable.
+                                  type: string
+                                value:
+                                  description: |-
+                                    (String) Environment variable value.
+                                    Environment variable value.
+                                  type: string
+                              type: object
+                            type: array
+                          hyperdriveBindings:
+                            description: (Attributes Map) Hyperdrive bindings used
+                              for Pages Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                id:
+                                  description: (String) Name of the project.
+                                  type: string
+                              type: object
+                            type: array
+                          kvNamespaces:
+                            description: (Attributes Map) KV namespaces used for Pages
+                              Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                namespaceId:
+                                  description: |-
+                                    (String) ID of the Durabble Object namespace.
+                                    ID of the KV namespace.
+                                  type: string
+                              type: object
+                            type: array
+                          mtlsCertificates:
+                            description: (Attributes Map) mTLS bindings used for Pages
+                              Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                certificateId:
+                                  description: (String)
+                                  type: string
+                              type: object
+                            type: array
+                          placement:
+                            description: (Attributes) Placement setting used for Pages
+                              Functions. (see below for nested schema)
+                            properties:
+                              mode:
+                                description: |-
+                                  (String) Placement mode.
+                                  Placement mode.
+                                type: string
+                            type: object
+                          queueProducers:
+                            description: (Attributes Map) Queue Producer bindings
+                              used for Pages Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                name:
+                                  description: |-
+                                    (String) Name of the project.
+                                    Name of the Queue.
+                                  type: string
+                              type: object
+                            type: array
+                          r2Buckets:
+                            description: (Attributes Map) R2 buckets used for Pages
+                              Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                jurisdiction:
+                                  description: |-
+                                    (String) Jurisdiction of the R2 bucket.
+                                    Jurisdiction of the R2 bucket.
+                                  type: string
+                                name:
+                                  description: |-
+                                    (String) Name of the project.
+                                    Name of the R2 bucket.
+                                  type: string
+                              type: object
+                            type: array
+                          services:
+                            description: (Attributes Map) Services used for Pages
+                              Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                entrypoint:
+                                  description: |-
+                                    (String) The entrypoint to bind to.
+                                    The entrypoint to bind to.
+                                  type: string
+                                environment:
+                                  description: |-
+                                    (String) The Service environment.
+                                    The Service environment.
+                                  type: string
+                                service:
+                                  description: |-
+                                    (String) The Service name.
+                                    The Service name.
+                                  type: string
+                              type: object
+                            type: array
+                          vectorizeBindings:
+                            description: (Attributes Map) Vectorize bindings used
+                              for Pages Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                indexName:
+                                  description: (String)
+                                  type: string
+                              type: object
+                            type: array
+                        type: object
+                      production:
+                        description: (Attributes) Configs for production deploys.
+                          (see below for nested schema)
+                        properties:
+                          aiBindings:
+                            description: (Attributes Map) Constellation bindings used
+                              for Pages Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                projectId:
+                                  description: (String)
+                                  type: string
+                              type: object
+                            type: array
+                          analyticsEngineDatasets:
+                            description: (Attributes Map) Analytics Engine bindings
+                              used for Pages Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                dataset:
+                                  description: |-
+                                    (String) Name of the dataset.
+                                    Name of the dataset.
+                                  type: string
+                              type: object
+                            type: array
+                          browsers:
+                            additionalProperties:
+                              type: object
+                            description: (Attributes Map) Browser bindings used for
+                              Pages Functions. (see below for nested schema)
+                            type: object
+                          compatibilityDate:
+                            description: |-
+                              (String) Compatibility date used for Pages Functions.
+                              Compatibility date used for Pages Functions.
+                            type: string
+                          compatibilityFlags:
+                            description: |-
+                              (List of String) Compatibility flags used for Pages Functions.
+                              Compatibility flags used for Pages Functions.
+                            items:
+                              type: string
+                            type: array
+                          d1Databases:
+                            description: (Attributes Map) D1 databases used for Pages
+                              Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                id:
+                                  description: |-
+                                    (String) Name of the project.
+                                    UUID of the D1 database.
+                                  type: string
+                              type: object
+                            type: array
+                          durableObjectNamespaces:
+                            description: (Attributes Map) Durabble Object namespaces
+                              used for Pages Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                namespaceId:
+                                  description: |-
+                                    (String) ID of the Durabble Object namespace.
+                                    ID of the Durabble Object namespace.
+                                  type: string
+                              type: object
+                            type: array
+                          envVars:
+                            description: (Attributes Map) Environment variables for
+                              build configs. (see below for nested schema)
+                            items:
+                              properties:
+                                type:
+                                  description: |-
+                                    (String) The type of environment variable.
+                                    The type of environment variable.
+                                  type: string
+                                value:
+                                  description: |-
+                                    (String) Environment variable value.
+                                    Environment variable value.
+                                  type: string
+                              type: object
+                            type: array
+                          hyperdriveBindings:
+                            description: (Attributes Map) Hyperdrive bindings used
+                              for Pages Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                id:
+                                  description: (String) Name of the project.
+                                  type: string
+                              type: object
+                            type: array
+                          kvNamespaces:
+                            description: (Attributes Map) KV namespaces used for Pages
+                              Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                namespaceId:
+                                  description: |-
+                                    (String) ID of the Durabble Object namespace.
+                                    ID of the KV namespace.
+                                  type: string
+                              type: object
+                            type: array
+                          mtlsCertificates:
+                            description: (Attributes Map) mTLS bindings used for Pages
+                              Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                certificateId:
+                                  description: (String)
+                                  type: string
+                              type: object
+                            type: array
+                          placement:
+                            description: (Attributes) Placement setting used for Pages
+                              Functions. (see below for nested schema)
+                            properties:
+                              mode:
+                                description: |-
+                                  (String) Placement mode.
+                                  Placement mode.
+                                type: string
+                            type: object
+                          queueProducers:
+                            description: (Attributes Map) Queue Producer bindings
+                              used for Pages Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                name:
+                                  description: |-
+                                    (String) Name of the project.
+                                    Name of the Queue.
+                                  type: string
+                              type: object
+                            type: array
+                          r2Buckets:
+                            description: (Attributes Map) R2 buckets used for Pages
+                              Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                jurisdiction:
+                                  description: |-
+                                    (String) Jurisdiction of the R2 bucket.
+                                    Jurisdiction of the R2 bucket.
+                                  type: string
+                                name:
+                                  description: |-
+                                    (String) Name of the project.
+                                    Name of the R2 bucket.
+                                  type: string
+                              type: object
+                            type: array
+                          services:
+                            description: (Attributes Map) Services used for Pages
+                              Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                entrypoint:
+                                  description: |-
+                                    (String) The entrypoint to bind to.
+                                    The entrypoint to bind to.
+                                  type: string
+                                environment:
+                                  description: |-
+                                    (String) The Service environment.
+                                    The Service environment.
+                                  type: string
+                                service:
+                                  description: |-
+                                    (String) The Service name.
+                                    The Service name.
+                                  type: string
+                              type: object
+                            type: array
+                          vectorizeBindings:
+                            description: (Attributes Map) Vectorize bindings used
+                              for Pages Functions. (see below for nested schema)
+                            items:
+                              properties:
+                                indexName:
+                                  description: (String)
+                                  type: string
+                              type: object
+                            type: array
+                        type: object
+                    type: object
+                  domains:
+                    description: |-
+                      (List of String) A list of associated custom domains for the project.
+                      A list of associated custom domains for the project.
+                    items:
+                      type: string
+                    type: array
+                  id:
+                    description: (String) Name of the project.
+                    type: string
+                  latestDeployment:
+                    description: (Attributes) Most recent deployment to the repo.
+                      (see below for nested schema)
+                    properties:
+                      aliases:
+                        description: |-
+                          (List of String) A list of alias URLs pointing to this deployment.
+                          A list of alias URLs pointing to this deployment.
+                        items:
+                          type: string
+                        type: array
+                      buildConfig:
+                        description: (Attributes) Configs for the project build process.
+                          (see below for nested schema)
+                        properties:
+                          buildCaching:
+                            description: |-
+                              (Boolean) Enable build caching for the project.
+                              Enable build caching for the project.
+                            type: boolean
+                          buildCommand:
+                            description: |-
+                              (String) Command used to build project.
+                              Command used to build project.
+                            type: string
+                          destinationDir:
+                            description: |-
+                              (String) Output directory of the build.
+                              Output directory of the build.
+                            type: string
+                          rootDir:
+                            description: |-
+                              (String) Directory to run the command.
+                              Directory to run the command.
+                            type: string
+                          webAnalyticsTag:
+                            description: |-
+                              (String) The classifying tag for analytics.
+                              The classifying tag for analytics.
+                            type: string
+                          webAnalyticsToken:
+                            description: |-
+                              (String) The auth token for analytics.
+                              The auth token for analytics.
+                            type: string
+                        type: object
+                      createdOn:
+                        description: |-
+                          (String) When the project was created.
+                          When the deployment was created.
+                        type: string
+                      deploymentTrigger:
+                        description: (Attributes) Info about what caused the deployment.
+                          (see below for nested schema)
+                        properties:
+                          metadata:
+                            description: (Attributes) Additional info about the trigger.
+                              (see below for nested schema)
+                            properties:
+                              branch:
+                                description: |-
+                                  (String) Where the trigger happened.
+                                  Where the trigger happened.
+                                type: string
+                              commitHash:
+                                description: |-
+                                  (String) Hash of the deployment trigger commit.
+                                  Hash of the deployment trigger commit.
+                                type: string
+                              commitMessage:
+                                description: |-
+                                  (String) Message of the deployment trigger commit.
+                                  Message of the deployment trigger commit.
+                                type: string
+                            type: object
+                          type:
+                            description: |-
+                              (String) The type of environment variable.
+                              What caused the deployment.
+                            type: string
+                        type: object
+                      envVars:
+                        description: (Attributes Map) Environment variables for build
+                          configs. (see below for nested schema)
+                        items:
+                          properties:
+                            type:
+                              description: |-
+                                (String) The type of environment variable.
+                                The type of environment variable.
+                              type: string
+                            value:
+                              description: |-
+                                (String) Environment variable value.
+                                Environment variable value.
+                              type: string
+                          type: object
+                        type: array
+                      environment:
+                        description: |-
+                          (String) The Service environment.
+                          Type of deploy.
+                        type: string
+                      id:
+                        description: |-
+                          (String) Name of the project.
+                          Id of the deployment.
+                        type: string
+                      isSkipped:
+                        description: |-
+                          (Boolean) If the deployment has been skipped.
+                          If the deployment has been skipped.
+                        type: boolean
+                      latestStage:
+                        description: (Attributes) The status of the deployment. (see
+                          below for nested schema)
+                        properties:
+                          endedOn:
+                            description: |-
+                              (String) When the stage ended.
+                              When the stage ended.
+                            type: string
+                          name:
+                            description: |-
+                              (String) Name of the project.
+                              The current build stage.
+                            type: string
+                          startedOn:
+                            description: |-
+                              (String) When the stage started.
+                              When the stage started.
+                            type: string
+                          status:
+                            description: |-
+                              (String) State of the current stage.
+                              State of the current stage.
+                            type: string
+                        type: object
+                      modifiedOn:
+                        description: |-
+                          (String) When the deployment was last modified.
+                          When the deployment was last modified.
+                        type: string
+                      projectId:
+                        description: |-
+                          (String)
+                          Id of the project.
+                        type: string
+                      projectName:
+                        description: |-
+                          (String) Name of the project.
+                          Name of the project.
+                        type: string
+                      shortId:
+                        description: |-
+                          (String) Short Id (8 character) of the deployment.
+                          Short Id (8 character) of the deployment.
+                        type: string
+                      source:
+                        description: (Attributes) (see below for nested schema)
+                        properties:
+                          config:
+                            description: (Attributes) (see below for nested schema)
+                            properties:
+                              deploymentsEnabled:
+                                description: (Boolean)
+                                type: boolean
+                              owner:
+                                description: (String)
+                                type: string
+                              pathExcludes:
+                                description: (List of String)
+                                items:
+                                  type: string
+                                type: array
+                              pathIncludes:
+                                description: (List of String)
+                                items:
+                                  type: string
+                                type: array
+                              prCommentsEnabled:
+                                description: (Boolean)
+                                type: boolean
+                              previewBranchExcludes:
+                                description: (List of String)
+                                items:
+                                  type: string
+                                type: array
+                              previewBranchIncludes:
+                                description: (List of String)
+                                items:
+                                  type: string
+                                type: array
+                              previewDeploymentSetting:
+                                description: (String)
+                                type: string
+                              productionBranch:
+                                description: (String) Production branch of the project.
+                                  Used to identify production deployments.
+                                type: string
+                              productionDeploymentsEnabled:
+                                description: (Boolean)
+                                type: boolean
+                              repoName:
+                                description: (String)
+                                type: string
+                            type: object
+                          type:
+                            description: (String) The type of environment variable.
+                            type: string
+                        type: object
+                      stages:
+                        description: (Attributes List) List of past stages. (see below
+                          for nested schema)
+                        items:
+                          properties:
+                            endedOn:
+                              description: |-
+                                (String) When the stage ended.
+                                When the stage ended.
+                              type: string
+                            name:
+                              description: |-
+                                (String) Name of the project.
+                                The current build stage.
+                              type: string
+                            startedOn:
+                              description: |-
+                                (String) When the stage started.
+                                When the stage started.
+                              type: string
+                            status:
+                              description: |-
+                                (String) State of the current stage.
+                                State of the current stage.
+                              type: string
+                          type: object
+                        type: array
+                      url:
+                        description: |-
+                          (String) The live URL to view this deployment.
+                          The live URL to view this deployment.
+                        type: string
+                    type: object
+                  productionBranch:
+                    description: |-
+                      (String) Production branch of the project. Used to identify production deployments.
+                      Production branch of the project. Used to identify production deployments.
+                    type: string
+                  source:
+                    description: (Attributes) (see below for nested schema)
+                    properties:
+                      config:
+                        description: (Attributes) (see below for nested schema)
+                        properties:
+                          deploymentsEnabled:
+                            description: (Boolean)
+                            type: boolean
+                          owner:
+                            description: (String)
+                            type: string
+                          pathExcludes:
+                            description: (List of String)
+                            items:
+                              type: string
+                            type: array
+                          pathIncludes:
+                            description: (List of String)
+                            items:
+                              type: string
+                            type: array
+                          prCommentsEnabled:
+                            description: (Boolean)
+                            type: boolean
+                          previewBranchExcludes:
+                            description: (List of String)
+                            items:
+                              type: string
+                            type: array
+                          previewBranchIncludes:
+                            description: (List of String)
+                            items:
+                              type: string
+                            type: array
+                          previewDeploymentSetting:
+                            description: (String)
+                            type: string
+                          productionBranch:
+                            description: (String) Production branch of the project.
+                              Used to identify production deployments.
+                            type: string
+                          productionDeploymentsEnabled:
+                            description: (Boolean)
+                            type: boolean
+                          repoName:
+                            description: (String)
+                            type: string
+                        type: object
+                      type:
+                        description: (String) The type of environment variable.
+                        type: string
+                    type: object
+                  subdomain:
+                    description: |-
+                      (String) The Cloudflare subdomain associated with the project.
+                      The Cloudflare subdomain associated with the project.
+                    type: string
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        LastTransitionTime is the last time this condition transitioned from one
+                        status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        A Message containing details about this condition's last transition from
+                        one status to another, if any.
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        ObservedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: |-
+                        Type of this condition. At most one of each condition type may apply to
+                        a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              observedGeneration:
+                description: |-
+                  ObservedGeneration is the latest metadata.generation
+                  which resulted in either a ready state, or stalled due to error
+                  it can not recover from without human intervention.
+                format: int64
+                type: integer
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

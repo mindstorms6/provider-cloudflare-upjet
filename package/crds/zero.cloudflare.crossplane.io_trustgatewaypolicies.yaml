@@ -1,0 +1,1728 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: trustgatewaypolicies.zero.cloudflare.crossplane.io
+spec:
+  group: zero.cloudflare.crossplane.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - cloudflare-upjet
+    kind: TrustGatewayPolicy
+    listKind: TrustGatewayPolicyList
+    plural: trustgatewaypolicies
+    singular: trustgatewaypolicy
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: TrustGatewayPolicy is the Schema for the TrustGatewayPolicys
+          API.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TrustGatewayPolicySpec defines the desired state of TrustGatewayPolicy
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: |-
+                  DeletionPolicy specifies what will happen to the underlying external
+                  when this managed resource is deleted - either "Delete" or "Orphan" the
+                  external resource.
+                  This field is planned to be deprecated in favor of the ManagementPolicies
+                  field in a future release. Currently, both could be set independently and
+                  non-default values would be honored if the feature flag is enabled.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                properties:
+                  accountId:
+                    description: (String)
+                    type: string
+                  action:
+                    description: |-
+                      (String) The action to preform when the associated traffic, identity, and device posture expressions are either absent or evaluate to true.
+                      The action to preform when the associated traffic, identity, and device posture expressions are either absent or evaluate to `true`.
+                    type: string
+                  description:
+                    description: |-
+                      (String) The description of the rule.
+                      The description of the rule.
+                    type: string
+                  devicePosture:
+                    description: |-
+                      (String) The wirefilter expression used for device posture check matching.
+                      The wirefilter expression used for device posture check matching.
+                    type: string
+                  enabled:
+                    description: |-
+                      (Boolean) True if the rule is enabled.
+                      True if the rule is enabled.
+                    type: boolean
+                  expiration:
+                    description: |-
+                      (Attributes) The expiration time stamp and default duration of a DNS policy. Takes
+                      precedence over the policy's schedule configuration, if any.
+                    properties:
+                      duration:
+                        description: |-
+                          (Number) The default duration a policy will be active in minutes. Must be set in order to use the reset_expiration endpoint on this rule.
+                          The default duration a policy will be active in minutes. Must be set in order to use the `reset_expiration` endpoint on this rule.
+                        type: number
+                      expired:
+                        description: |-
+                          (Boolean) Whether the policy has expired.
+                          Whether the policy has expired.
+                        type: boolean
+                      expiresAt:
+                        description: |-
+                          (String) The time stamp at which the policy will expire and cease to be
+                          applied.
+                          The time stamp at which the policy will expire and cease to be
+                          applied.
+
+
+                          Must adhere to RFC 3339 and include a UTC offset. Non-zero
+                          offsets are accepted but will be converted to the equivalent
+                          value with offset zero (UTC+00:00) and will be returned as time
+                          stamps with offset zero denoted by a trailing 'Z'.
+
+
+                          Policies with an expiration do not consider the timezone of
+                          clients they are applied to, and expire "globally" at the point
+                          given by their `expires_at` value.
+                        type: string
+                    type: object
+                  filters:
+                    description: |-
+                      (List of String) The protocol or layer to evaluate the traffic, identity, and device posture expressions.
+                      The protocol or layer to evaluate the traffic, identity, and device posture expressions.
+                    items:
+                      type: string
+                    type: array
+                  identity:
+                    description: |-
+                      (String) The wirefilter expression used for identity matching.
+                      The wirefilter expression used for identity matching.
+                    type: string
+                  precedence:
+                    description: |-
+                      (Number) Precedence sets the order of your rules. Lower values indicate higher precedence. At each processing phase, applicable rules are evaluated in ascending order of this value.
+                      Precedence sets the order of your rules. Lower values indicate higher precedence. At each processing phase, applicable rules are evaluated in ascending order of this value.
+                    type: number
+                  ruleSettings:
+                    description: (Attributes) Additional settings that modify the
+                      rule's action. (see below for nested schema)
+                    properties:
+                      addHeaders:
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          value pairs. Keys are header names, pointing to an array with its header value(s).
+                          Add custom headers to allowed requests, in the form of key-value pairs. Keys are header names, pointing to an array with its header value(s).
+                        type: object
+                        x-kubernetes-map-type: granular
+                      allowChildBypass:
+                        description: |-
+                          (Boolean) Set by parent MSP accounts to enable their children to bypass this rule.
+                          Set by parent MSP accounts to enable their children to bypass this rule.
+                        type: boolean
+                      auditSsh:
+                        description: (Attributes) Settings for the Audit SSH action.
+                          (see below for nested schema)
+                        properties:
+                          commandLogging:
+                            description: |-
+                              (Boolean) Enable to turn on SSH command logging.
+                              Enable to turn on SSH command logging.
+                            type: boolean
+                        type: object
+                      bisoAdminControls:
+                        description: (Attributes) Configure how browser isolation
+                          behaves. (see below for nested schema)
+                        properties:
+                          copy:
+                            description: |-
+                              (String) Configure whether copy is enabled or not. When set with "remote_only", copying isolated content from the remote browser to the user's local clipboard is disabled. When absent, copy is enabled. Only applies when version == "v2".
+                              Configure whether copy is enabled or not. When set with "remote_only", copying isolated content from the remote browser to the user's local clipboard is disabled. When absent, copy is enabled. Only applies when `version == "v2"`.
+                            type: string
+                          dcp:
+                            description: |-
+                              pasting. Only applies when version == "v1".
+                              Set to false to enable copy-pasting. Only applies when `version == "v1"`.
+                            type: boolean
+                          dd:
+                            description: |-
+                              (Boolean) Set to false to enable downloading. Only applies when version == "v1".
+                              Set to false to enable downloading. Only applies when `version == "v1"`.
+                            type: boolean
+                          dk:
+                            description: |-
+                              (Boolean) Set to false to enable keyboard usage. Only applies when version == "v1".
+                              Set to false to enable keyboard usage. Only applies when `version == "v1"`.
+                            type: boolean
+                          download:
+                            description: |-
+                              (String) Configure whether downloading enabled or not. When absent, downloading is enabled. Only applies when version == "v2".
+                              Configure whether downloading enabled or not. When absent, downloading is enabled. Only applies when `version == "v2"`.
+                            type: string
+                          dp:
+                            description: |-
+                              (Boolean) Set to false to enable printing. Only applies when version == "v1".
+                              Set to false to enable printing. Only applies when `version == "v1"`.
+                            type: boolean
+                          du:
+                            description: |-
+                              (Boolean) Set to false to enable uploading. Only applies when version == "v1".
+                              Set to false to enable uploading. Only applies when `version == "v1"`.
+                            type: boolean
+                          keyboard:
+                            description: |-
+                              (String) Configure whether keyboard usage is enabled or not. When absent, keyboard usage is enabled. Only applies when version == "v2".
+                              Configure whether keyboard usage is enabled or not. When absent, keyboard usage is enabled. Only applies when `version == "v2"`.
+                            type: string
+                          paste:
+                            description: |-
+                              (String) Configure whether pasting is enabled or not. When set with "remote_only", pasting content from the user's local clipboard into isolated pages is disabled. When absent, paste is enabled. Only applies when version == "v2".
+                              Configure whether pasting is enabled or not. When set with "remote_only", pasting content from the user's local clipboard into isolated pages is disabled. When absent, paste is enabled. Only applies when `version == "v2"`.
+                            type: string
+                          printing:
+                            description: |-
+                              (String) Configure whether printing is enabled or not. When absent, printing is enabled. Only applies when version == "v2".
+                              Configure whether printing is enabled or not. When absent, printing is enabled. Only applies when `version == "v2"`.
+                            type: string
+                          upload:
+                            description: |-
+                              (String) Configure whether uploading is enabled or not. When absent, uploading is enabled. Only applies when version == "v2".
+                              Configure whether uploading is enabled or not. When absent, uploading is enabled. Only applies when `version == "v2"`.
+                            type: string
+                          version:
+                            description: |-
+                              (Number) version number of the rule
+                              Indicates which version of the browser isolation controls should apply.
+                            type: string
+                        type: object
+                      blockPageEnabled:
+                        description: |-
+                          (Boolean) Enable the custom block page.
+                          Enable the custom block page.
+                        type: boolean
+                      blockReason:
+                        description: |-
+                          (String) The text describing why this block occurred, displayed on the custom block page (if enabled).
+                          The text describing why this block occurred, displayed on the custom block page (if enabled).
+                        type: string
+                      bypassParentRule:
+                        description: |-
+                          (Boolean) Set by children MSP accounts to bypass their parent's rules.
+                          Set by children MSP accounts to bypass their parent's rules.
+                        type: boolean
+                      checkSession:
+                        description: (Attributes) Configure how session check behaves.
+                          (see below for nested schema)
+                        properties:
+                          duration:
+                            description: |-
+                              (Number) The default duration a policy will be active in minutes. Must be set in order to use the reset_expiration endpoint on this rule.
+                              Configure how fresh the session needs to be to be considered valid.
+                            type: string
+                          enforce:
+                            description: |-
+                              (Boolean) Set to true to enable session enforcement.
+                              Set to true to enable session enforcement.
+                            type: boolean
+                        type: object
+                      dnsResolvers:
+                        description: (Attributes) Add your own custom resolvers to
+                          route queries that match the resolver policy. Cannot be
+                          used when 'resolve_dns_through_cloudflare' or 'resolve_dns_internally'
+                          are set. DNS queries will route to the address closest to
+                          their origin. Only valid when a rule's action is set to
+                          'resolve'. (see below for nested schema)
+                        properties:
+                          ipv4:
+                            description: (Attributes List) (see below for nested schema)
+                            items:
+                              properties:
+                                ip:
+                                  description: |-
+                                    (String) IPv4 address of upstream resolver.
+                                    IPv4 address of upstream resolver.
+                                  type: string
+                                port:
+                                  description: |-
+                                    (Number) A port number to use for upstream resolver. Defaults to 53 if unspecified.
+                                    A port number to use for upstream resolver. Defaults to 53 if unspecified.
+                                  type: number
+                                routeThroughPrivateNetwork:
+                                  description: |-
+                                    (Boolean) Whether to connect to this resolver over a private network. Must be set when vnet_id is set.
+                                    Whether to connect to this resolver over a private network. Must be set when vnet_id is set.
+                                  type: boolean
+                                vnetId:
+                                  description: |-
+                                    (String) Optionally specify a virtual network for this resolver. Uses default virtual network id if omitted.
+                                    Optionally specify a virtual network for this resolver. Uses default virtual network id if omitted.
+                                  type: string
+                              type: object
+                            type: array
+                          ipv6:
+                            description: (Attributes List) (see below for nested schema)
+                            items:
+                              properties:
+                                ip:
+                                  description: |-
+                                    (String) IPv4 address of upstream resolver.
+                                    IPv6 address of upstream resolver.
+                                  type: string
+                                port:
+                                  description: |-
+                                    (Number) A port number to use for upstream resolver. Defaults to 53 if unspecified.
+                                    A port number to use for upstream resolver. Defaults to 53 if unspecified.
+                                  type: number
+                                routeThroughPrivateNetwork:
+                                  description: |-
+                                    (Boolean) Whether to connect to this resolver over a private network. Must be set when vnet_id is set.
+                                    Whether to connect to this resolver over a private network. Must be set when vnet_id is set.
+                                  type: boolean
+                                vnetId:
+                                  description: |-
+                                    (String) Optionally specify a virtual network for this resolver. Uses default virtual network id if omitted.
+                                    Optionally specify a virtual network for this resolver. Uses default virtual network id if omitted.
+                                  type: string
+                              type: object
+                            type: array
+                        type: object
+                      egress:
+                        description: (Attributes) Configure how Gateway Proxy traffic
+                          egresses. You can enable this setting for rules with Egress
+                          actions and filters, or omit it to indicate local egress
+                          via WARP IPs. (see below for nested schema)
+                        properties:
+                          ipv4:
+                            description: |-
+                              (Attributes List) (see below for nested schema)
+                              The IPv4 address to be used for egress.
+                            type: string
+                          ipv4Fallback:
+                            description: |-
+                              (String) The fallback IPv4 address to be used for egress in the event of an error egressing with the primary IPv4. Can be '0.0.0.0' to indicate local egress via WARP IPs.
+                              The fallback IPv4 address to be used for egress in the event of an error egressing with the primary IPv4. Can be '0.0.0.0' to indicate local egress via WARP IPs.
+                            type: string
+                          ipv6:
+                            description: |-
+                              (Attributes List) (see below for nested schema)
+                              The IPv6 range to be used for egress.
+                            type: string
+                        type: object
+                      ignoreCnameCategoryMatches:
+                        description: |-
+                          (Boolean) Set to true, to ignore the category matches at CNAME domains in a response. If unchecked, the categories in this rule will be checked against all the CNAME domain categories in a response.
+                          Set to true, to ignore the category matches at CNAME domains in a response. If unchecked, the categories in this rule will be checked against all the CNAME domain categories in a response.
+                        type: boolean
+                      insecureDisableDnssecValidation:
+                        description: |-
+                          disable DNSSEC validation (for Allow actions).
+                          INSECURE - disable DNSSEC validation (for Allow actions).
+                        type: boolean
+                      ipCategories:
+                        description: |-
+                          (Boolean) Set to true to enable IPs in DNS resolver category blocks. By default categories only block based on domain names.
+                          Set to true to enable IPs in DNS resolver category blocks. By default categories only block based on domain names.
+                        type: boolean
+                      ipIndicatorFeeds:
+                        description: |-
+                          (Boolean) Set to true to include IPs in DNS resolver indicator feed blocks. By default indicator feeds only block based on domain names.
+                          Set to true to include IPs in DNS resolver indicator feed blocks. By default indicator feeds only block based on domain names.
+                        type: boolean
+                      l4override:
+                        description: (Attributes) Send matching traffic to the supplied
+                          destination IP address and port. (see below for nested schema)
+                        properties:
+                          ip:
+                            description: |-
+                              (String) IPv4 address of upstream resolver.
+                              IPv4 or IPv6 address.
+                            type: string
+                          port:
+                            description: |-
+                              (Number) A port number to use for upstream resolver. Defaults to 53 if unspecified.
+                              A port number to use for TCP/UDP overrides.
+                            type: number
+                        type: object
+                      notificationSettings:
+                        description: (Attributes) Configure a notification to display
+                          on the user's device when this rule is matched. (see below
+                          for nested schema)
+                        properties:
+                          enabled:
+                            description: |-
+                              (Boolean) True if the rule is enabled.
+                              Set notification on
+                            type: boolean
+                          msg:
+                            description: |-
+                              (String) Customize the message shown in the notification.
+                              Customize the message shown in the notification.
+                            type: string
+                          supportUrl:
+                            description: |-
+                              (String) Optional URL to direct users to additional information. If not set, the notification will open a block page.
+                              Optional URL to direct users to additional information. If not set, the notification will open a block page.
+                            type: string
+                        type: object
+                      overrideHost:
+                        description: |-
+                          (String) Override matching DNS queries with a hostname.
+                          Override matching DNS queries with a hostname.
+                        type: string
+                      overrideIps:
+                        description: |-
+                          (List of String) Override matching DNS queries with an IP or set of IPs.
+                          Override matching DNS queries with an IP or set of IPs.
+                        items:
+                          type: string
+                        type: array
+                      payloadLog:
+                        description: (Attributes) Configure DLP payload logging. (see
+                          below for nested schema)
+                        properties:
+                          enabled:
+                            description: |-
+                              (Boolean) True if the rule is enabled.
+                              Set to true to enable DLP payload logging for this rule.
+                            type: boolean
+                        type: object
+                      quarantine:
+                        description: (Attributes) Settings that apply to quarantine
+                          rules (see below for nested schema)
+                        properties:
+                          fileTypes:
+                            description: |-
+                              (List of String) Types of files to sandbox.
+                              Types of files to sandbox.
+                            items:
+                              type: string
+                            type: array
+                        type: object
+                      resolveDnsInternally:
+                        description: (Attributes) Configure to forward the query to
+                          the internal DNS service, passing the specified 'view_id'
+                          as input. Cannot be set when 'dns_resolvers' are specified
+                          or 'resolve_dns_through_cloudflare' is set. Only valid when
+                          a rule's action is set to 'resolve'. (see below for nested
+                          schema)
+                        properties:
+                          fallback:
+                            description: |-
+                              (String) The fallback behavior to apply when the internal DNS response code is different from 'NOERROR' or when the response data only contains CNAME records for 'A' or 'AAAA' queries.
+                              The fallback behavior to apply when the internal DNS response code is different from 'NOERROR' or when the response data only contains CNAME records for 'A' or 'AAAA' queries.
+                            type: string
+                          viewId:
+                            description: |-
+                              (String) The internal DNS view identifier that's passed to the internal DNS service.
+                              The internal DNS view identifier that's passed to the internal DNS service.
+                            type: string
+                        type: object
+                      resolveDnsThroughCloudflare:
+                        description: |-
+                          (Boolean) Enable to send queries that match the policy to Cloudflare's default 1.1.1.1 DNS resolver. Cannot be set when 'dns_resolvers' are specified or 'resolve_dns_internally' is set. Only valid when a rule's action is set to 'resolve'.
+                          Enable to send queries that match the policy to Cloudflare's default 1.1.1.1 DNS resolver. Cannot be set when 'dns_resolvers' are specified or 'resolve_dns_internally' is set. Only valid when a rule's action is set to 'resolve'.
+                        type: boolean
+                      untrustedCert:
+                        description: (Attributes) Configure behavior when an upstream
+                          cert is invalid or an SSL error occurs. (see below for nested
+                          schema)
+                        properties:
+                          action:
+                            description: |-
+                              (String) The action to preform when the associated traffic, identity, and device posture expressions are either absent or evaluate to true.
+                              The action performed when an untrusted certificate is seen. The default action is an error with HTTP code 526.
+                            type: string
+                        type: object
+                    type: object
+                  schedule:
+                    description: (Attributes) The schedule for activating DNS policies.
+                      This does not apply to HTTP or network policies. (see below
+                      for nested schema)
+                    properties:
+                      fri:
+                        description: |-
+                          24:00.  If this parameter is omitted, the rule will be deactivated on Fridays.
+                          The time intervals when the rule will be active on Fridays, in increasing order from 00:00-24:00.  If this parameter is omitted, the rule will be deactivated on Fridays.
+                        type: string
+                      mon:
+                        description: |-
+                          24:00. If this parameter is omitted, the rule will be deactivated on Mondays.
+                          The time intervals when the rule will be active on Mondays, in increasing order from 00:00-24:00. If this parameter is omitted, the rule will be deactivated on Mondays.
+                        type: string
+                      sat:
+                        description: |-
+                          24:00.  If this parameter is omitted, the rule will be deactivated on Saturdays.
+                          The time intervals when the rule will be active on Saturdays, in increasing order from 00:00-24:00.  If this parameter is omitted, the rule will be deactivated on Saturdays.
+                        type: string
+                      sun:
+                        description: |-
+                          24:00. If this parameter is omitted, the rule will be deactivated on Sundays.
+                          The time intervals when the rule will be active on Sundays, in increasing order from 00:00-24:00. If this parameter is omitted, the rule will be deactivated on Sundays.
+                        type: string
+                      thu:
+                        description: |-
+                          24:00. If this parameter is omitted, the rule will be deactivated on Thursdays.
+                          The time intervals when the rule will be active on Thursdays, in increasing order from 00:00-24:00. If this parameter is omitted, the rule will be deactivated on Thursdays.
+                        type: string
+                      timeZone:
+                        description: |-
+                          (String) The time zone the rule will be evaluated against. If a valid time zone city name is provided, Gateway will always use the current time at that time zone. If this parameter is omitted, then Gateway will use the time zone inferred from the user's source IP to evaluate the rule. If Gateway cannot determine the time zone from the IP, we will fall back to the time zone of the user's connected data center.
+                          The time zone the rule will be evaluated against. If a [valid time zone city name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) is provided, Gateway will always use the current time at that time zone. If this parameter is omitted, then Gateway will use the time zone inferred from the user's source IP to evaluate the rule. If Gateway cannot determine the time zone from the IP, we will fall back to the time zone of the user's connected data center.
+                        type: string
+                      tue:
+                        description: |-
+                          24:00. If this parameter is omitted, the rule will be deactivated on Tuesdays.
+                          The time intervals when the rule will be active on Tuesdays, in increasing order from 00:00-24:00. If this parameter is omitted, the rule will be deactivated on Tuesdays.
+                        type: string
+                      wed:
+                        description: |-
+                          24:00. If this parameter is omitted, the rule will be deactivated on Wednesdays.
+                          The time intervals when the rule will be active on Wednesdays, in increasing order from 00:00-24:00. If this parameter is omitted, the rule will be deactivated on Wednesdays.
+                        type: string
+                    type: object
+                  traffic:
+                    description: |-
+                      (String) The wirefilter expression used for traffic matching.
+                      The wirefilter expression used for traffic matching.
+                    type: string
+                type: object
+              initProvider:
+                description: |-
+                  THIS IS A BETA FIELD. It will be honored
+                  unless the Management Policies feature flag is disabled.
+                  InitProvider holds the same fields as ForProvider, with the exception
+                  of Identifier and other resource reference fields. The fields that are
+                  in InitProvider are merged into ForProvider when the resource is created.
+                  The same fields are also added to the terraform ignore_changes hook, to
+                  avoid updating them after creation. This is useful for fields that are
+                  required on creation, but we do not desire to update them after creation,
+                  for example because of an external controller is managing them, like an
+                  autoscaler.
+                properties:
+                  accountId:
+                    description: (String)
+                    type: string
+                  action:
+                    description: |-
+                      (String) The action to preform when the associated traffic, identity, and device posture expressions are either absent or evaluate to true.
+                      The action to preform when the associated traffic, identity, and device posture expressions are either absent or evaluate to `true`.
+                    type: string
+                  description:
+                    description: |-
+                      (String) The description of the rule.
+                      The description of the rule.
+                    type: string
+                  devicePosture:
+                    description: |-
+                      (String) The wirefilter expression used for device posture check matching.
+                      The wirefilter expression used for device posture check matching.
+                    type: string
+                  enabled:
+                    description: |-
+                      (Boolean) True if the rule is enabled.
+                      True if the rule is enabled.
+                    type: boolean
+                  expiration:
+                    description: |-
+                      (Attributes) The expiration time stamp and default duration of a DNS policy. Takes
+                      precedence over the policy's schedule configuration, if any.
+                    properties:
+                      duration:
+                        description: |-
+                          (Number) The default duration a policy will be active in minutes. Must be set in order to use the reset_expiration endpoint on this rule.
+                          The default duration a policy will be active in minutes. Must be set in order to use the `reset_expiration` endpoint on this rule.
+                        type: number
+                      expired:
+                        description: |-
+                          (Boolean) Whether the policy has expired.
+                          Whether the policy has expired.
+                        type: boolean
+                      expiresAt:
+                        description: |-
+                          (String) The time stamp at which the policy will expire and cease to be
+                          applied.
+                          The time stamp at which the policy will expire and cease to be
+                          applied.
+
+
+                          Must adhere to RFC 3339 and include a UTC offset. Non-zero
+                          offsets are accepted but will be converted to the equivalent
+                          value with offset zero (UTC+00:00) and will be returned as time
+                          stamps with offset zero denoted by a trailing 'Z'.
+
+
+                          Policies with an expiration do not consider the timezone of
+                          clients they are applied to, and expire "globally" at the point
+                          given by their `expires_at` value.
+                        type: string
+                    type: object
+                  filters:
+                    description: |-
+                      (List of String) The protocol or layer to evaluate the traffic, identity, and device posture expressions.
+                      The protocol or layer to evaluate the traffic, identity, and device posture expressions.
+                    items:
+                      type: string
+                    type: array
+                  identity:
+                    description: |-
+                      (String) The wirefilter expression used for identity matching.
+                      The wirefilter expression used for identity matching.
+                    type: string
+                  precedence:
+                    description: |-
+                      (Number) Precedence sets the order of your rules. Lower values indicate higher precedence. At each processing phase, applicable rules are evaluated in ascending order of this value.
+                      Precedence sets the order of your rules. Lower values indicate higher precedence. At each processing phase, applicable rules are evaluated in ascending order of this value.
+                    type: number
+                  ruleSettings:
+                    description: (Attributes) Additional settings that modify the
+                      rule's action. (see below for nested schema)
+                    properties:
+                      addHeaders:
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          value pairs. Keys are header names, pointing to an array with its header value(s).
+                          Add custom headers to allowed requests, in the form of key-value pairs. Keys are header names, pointing to an array with its header value(s).
+                        type: object
+                        x-kubernetes-map-type: granular
+                      allowChildBypass:
+                        description: |-
+                          (Boolean) Set by parent MSP accounts to enable their children to bypass this rule.
+                          Set by parent MSP accounts to enable their children to bypass this rule.
+                        type: boolean
+                      auditSsh:
+                        description: (Attributes) Settings for the Audit SSH action.
+                          (see below for nested schema)
+                        properties:
+                          commandLogging:
+                            description: |-
+                              (Boolean) Enable to turn on SSH command logging.
+                              Enable to turn on SSH command logging.
+                            type: boolean
+                        type: object
+                      bisoAdminControls:
+                        description: (Attributes) Configure how browser isolation
+                          behaves. (see below for nested schema)
+                        properties:
+                          copy:
+                            description: |-
+                              (String) Configure whether copy is enabled or not. When set with "remote_only", copying isolated content from the remote browser to the user's local clipboard is disabled. When absent, copy is enabled. Only applies when version == "v2".
+                              Configure whether copy is enabled or not. When set with "remote_only", copying isolated content from the remote browser to the user's local clipboard is disabled. When absent, copy is enabled. Only applies when `version == "v2"`.
+                            type: string
+                          dcp:
+                            description: |-
+                              pasting. Only applies when version == "v1".
+                              Set to false to enable copy-pasting. Only applies when `version == "v1"`.
+                            type: boolean
+                          dd:
+                            description: |-
+                              (Boolean) Set to false to enable downloading. Only applies when version == "v1".
+                              Set to false to enable downloading. Only applies when `version == "v1"`.
+                            type: boolean
+                          dk:
+                            description: |-
+                              (Boolean) Set to false to enable keyboard usage. Only applies when version == "v1".
+                              Set to false to enable keyboard usage. Only applies when `version == "v1"`.
+                            type: boolean
+                          download:
+                            description: |-
+                              (String) Configure whether downloading enabled or not. When absent, downloading is enabled. Only applies when version == "v2".
+                              Configure whether downloading enabled or not. When absent, downloading is enabled. Only applies when `version == "v2"`.
+                            type: string
+                          dp:
+                            description: |-
+                              (Boolean) Set to false to enable printing. Only applies when version == "v1".
+                              Set to false to enable printing. Only applies when `version == "v1"`.
+                            type: boolean
+                          du:
+                            description: |-
+                              (Boolean) Set to false to enable uploading. Only applies when version == "v1".
+                              Set to false to enable uploading. Only applies when `version == "v1"`.
+                            type: boolean
+                          keyboard:
+                            description: |-
+                              (String) Configure whether keyboard usage is enabled or not. When absent, keyboard usage is enabled. Only applies when version == "v2".
+                              Configure whether keyboard usage is enabled or not. When absent, keyboard usage is enabled. Only applies when `version == "v2"`.
+                            type: string
+                          paste:
+                            description: |-
+                              (String) Configure whether pasting is enabled or not. When set with "remote_only", pasting content from the user's local clipboard into isolated pages is disabled. When absent, paste is enabled. Only applies when version == "v2".
+                              Configure whether pasting is enabled or not. When set with "remote_only", pasting content from the user's local clipboard into isolated pages is disabled. When absent, paste is enabled. Only applies when `version == "v2"`.
+                            type: string
+                          printing:
+                            description: |-
+                              (String) Configure whether printing is enabled or not. When absent, printing is enabled. Only applies when version == "v2".
+                              Configure whether printing is enabled or not. When absent, printing is enabled. Only applies when `version == "v2"`.
+                            type: string
+                          upload:
+                            description: |-
+                              (String) Configure whether uploading is enabled or not. When absent, uploading is enabled. Only applies when version == "v2".
+                              Configure whether uploading is enabled or not. When absent, uploading is enabled. Only applies when `version == "v2"`.
+                            type: string
+                          version:
+                            description: |-
+                              (Number) version number of the rule
+                              Indicates which version of the browser isolation controls should apply.
+                            type: string
+                        type: object
+                      blockPageEnabled:
+                        description: |-
+                          (Boolean) Enable the custom block page.
+                          Enable the custom block page.
+                        type: boolean
+                      blockReason:
+                        description: |-
+                          (String) The text describing why this block occurred, displayed on the custom block page (if enabled).
+                          The text describing why this block occurred, displayed on the custom block page (if enabled).
+                        type: string
+                      bypassParentRule:
+                        description: |-
+                          (Boolean) Set by children MSP accounts to bypass their parent's rules.
+                          Set by children MSP accounts to bypass their parent's rules.
+                        type: boolean
+                      checkSession:
+                        description: (Attributes) Configure how session check behaves.
+                          (see below for nested schema)
+                        properties:
+                          duration:
+                            description: |-
+                              (Number) The default duration a policy will be active in minutes. Must be set in order to use the reset_expiration endpoint on this rule.
+                              Configure how fresh the session needs to be to be considered valid.
+                            type: string
+                          enforce:
+                            description: |-
+                              (Boolean) Set to true to enable session enforcement.
+                              Set to true to enable session enforcement.
+                            type: boolean
+                        type: object
+                      dnsResolvers:
+                        description: (Attributes) Add your own custom resolvers to
+                          route queries that match the resolver policy. Cannot be
+                          used when 'resolve_dns_through_cloudflare' or 'resolve_dns_internally'
+                          are set. DNS queries will route to the address closest to
+                          their origin. Only valid when a rule's action is set to
+                          'resolve'. (see below for nested schema)
+                        properties:
+                          ipv4:
+                            description: (Attributes List) (see below for nested schema)
+                            items:
+                              properties:
+                                ip:
+                                  description: |-
+                                    (String) IPv4 address of upstream resolver.
+                                    IPv4 address of upstream resolver.
+                                  type: string
+                                port:
+                                  description: |-
+                                    (Number) A port number to use for upstream resolver. Defaults to 53 if unspecified.
+                                    A port number to use for upstream resolver. Defaults to 53 if unspecified.
+                                  type: number
+                                routeThroughPrivateNetwork:
+                                  description: |-
+                                    (Boolean) Whether to connect to this resolver over a private network. Must be set when vnet_id is set.
+                                    Whether to connect to this resolver over a private network. Must be set when vnet_id is set.
+                                  type: boolean
+                                vnetId:
+                                  description: |-
+                                    (String) Optionally specify a virtual network for this resolver. Uses default virtual network id if omitted.
+                                    Optionally specify a virtual network for this resolver. Uses default virtual network id if omitted.
+                                  type: string
+                              type: object
+                            type: array
+                          ipv6:
+                            description: (Attributes List) (see below for nested schema)
+                            items:
+                              properties:
+                                ip:
+                                  description: |-
+                                    (String) IPv4 address of upstream resolver.
+                                    IPv6 address of upstream resolver.
+                                  type: string
+                                port:
+                                  description: |-
+                                    (Number) A port number to use for upstream resolver. Defaults to 53 if unspecified.
+                                    A port number to use for upstream resolver. Defaults to 53 if unspecified.
+                                  type: number
+                                routeThroughPrivateNetwork:
+                                  description: |-
+                                    (Boolean) Whether to connect to this resolver over a private network. Must be set when vnet_id is set.
+                                    Whether to connect to this resolver over a private network. Must be set when vnet_id is set.
+                                  type: boolean
+                                vnetId:
+                                  description: |-
+                                    (String) Optionally specify a virtual network for this resolver. Uses default virtual network id if omitted.
+                                    Optionally specify a virtual network for this resolver. Uses default virtual network id if omitted.
+                                  type: string
+                              type: object
+                            type: array
+                        type: object
+                      egress:
+                        description: (Attributes) Configure how Gateway Proxy traffic
+                          egresses. You can enable this setting for rules with Egress
+                          actions and filters, or omit it to indicate local egress
+                          via WARP IPs. (see below for nested schema)
+                        properties:
+                          ipv4:
+                            description: |-
+                              (Attributes List) (see below for nested schema)
+                              The IPv4 address to be used for egress.
+                            type: string
+                          ipv4Fallback:
+                            description: |-
+                              (String) The fallback IPv4 address to be used for egress in the event of an error egressing with the primary IPv4. Can be '0.0.0.0' to indicate local egress via WARP IPs.
+                              The fallback IPv4 address to be used for egress in the event of an error egressing with the primary IPv4. Can be '0.0.0.0' to indicate local egress via WARP IPs.
+                            type: string
+                          ipv6:
+                            description: |-
+                              (Attributes List) (see below for nested schema)
+                              The IPv6 range to be used for egress.
+                            type: string
+                        type: object
+                      ignoreCnameCategoryMatches:
+                        description: |-
+                          (Boolean) Set to true, to ignore the category matches at CNAME domains in a response. If unchecked, the categories in this rule will be checked against all the CNAME domain categories in a response.
+                          Set to true, to ignore the category matches at CNAME domains in a response. If unchecked, the categories in this rule will be checked against all the CNAME domain categories in a response.
+                        type: boolean
+                      insecureDisableDnssecValidation:
+                        description: |-
+                          disable DNSSEC validation (for Allow actions).
+                          INSECURE - disable DNSSEC validation (for Allow actions).
+                        type: boolean
+                      ipCategories:
+                        description: |-
+                          (Boolean) Set to true to enable IPs in DNS resolver category blocks. By default categories only block based on domain names.
+                          Set to true to enable IPs in DNS resolver category blocks. By default categories only block based on domain names.
+                        type: boolean
+                      ipIndicatorFeeds:
+                        description: |-
+                          (Boolean) Set to true to include IPs in DNS resolver indicator feed blocks. By default indicator feeds only block based on domain names.
+                          Set to true to include IPs in DNS resolver indicator feed blocks. By default indicator feeds only block based on domain names.
+                        type: boolean
+                      l4override:
+                        description: (Attributes) Send matching traffic to the supplied
+                          destination IP address and port. (see below for nested schema)
+                        properties:
+                          ip:
+                            description: |-
+                              (String) IPv4 address of upstream resolver.
+                              IPv4 or IPv6 address.
+                            type: string
+                          port:
+                            description: |-
+                              (Number) A port number to use for upstream resolver. Defaults to 53 if unspecified.
+                              A port number to use for TCP/UDP overrides.
+                            type: number
+                        type: object
+                      notificationSettings:
+                        description: (Attributes) Configure a notification to display
+                          on the user's device when this rule is matched. (see below
+                          for nested schema)
+                        properties:
+                          enabled:
+                            description: |-
+                              (Boolean) True if the rule is enabled.
+                              Set notification on
+                            type: boolean
+                          msg:
+                            description: |-
+                              (String) Customize the message shown in the notification.
+                              Customize the message shown in the notification.
+                            type: string
+                          supportUrl:
+                            description: |-
+                              (String) Optional URL to direct users to additional information. If not set, the notification will open a block page.
+                              Optional URL to direct users to additional information. If not set, the notification will open a block page.
+                            type: string
+                        type: object
+                      overrideHost:
+                        description: |-
+                          (String) Override matching DNS queries with a hostname.
+                          Override matching DNS queries with a hostname.
+                        type: string
+                      overrideIps:
+                        description: |-
+                          (List of String) Override matching DNS queries with an IP or set of IPs.
+                          Override matching DNS queries with an IP or set of IPs.
+                        items:
+                          type: string
+                        type: array
+                      payloadLog:
+                        description: (Attributes) Configure DLP payload logging. (see
+                          below for nested schema)
+                        properties:
+                          enabled:
+                            description: |-
+                              (Boolean) True if the rule is enabled.
+                              Set to true to enable DLP payload logging for this rule.
+                            type: boolean
+                        type: object
+                      quarantine:
+                        description: (Attributes) Settings that apply to quarantine
+                          rules (see below for nested schema)
+                        properties:
+                          fileTypes:
+                            description: |-
+                              (List of String) Types of files to sandbox.
+                              Types of files to sandbox.
+                            items:
+                              type: string
+                            type: array
+                        type: object
+                      resolveDnsInternally:
+                        description: (Attributes) Configure to forward the query to
+                          the internal DNS service, passing the specified 'view_id'
+                          as input. Cannot be set when 'dns_resolvers' are specified
+                          or 'resolve_dns_through_cloudflare' is set. Only valid when
+                          a rule's action is set to 'resolve'. (see below for nested
+                          schema)
+                        properties:
+                          fallback:
+                            description: |-
+                              (String) The fallback behavior to apply when the internal DNS response code is different from 'NOERROR' or when the response data only contains CNAME records for 'A' or 'AAAA' queries.
+                              The fallback behavior to apply when the internal DNS response code is different from 'NOERROR' or when the response data only contains CNAME records for 'A' or 'AAAA' queries.
+                            type: string
+                          viewId:
+                            description: |-
+                              (String) The internal DNS view identifier that's passed to the internal DNS service.
+                              The internal DNS view identifier that's passed to the internal DNS service.
+                            type: string
+                        type: object
+                      resolveDnsThroughCloudflare:
+                        description: |-
+                          (Boolean) Enable to send queries that match the policy to Cloudflare's default 1.1.1.1 DNS resolver. Cannot be set when 'dns_resolvers' are specified or 'resolve_dns_internally' is set. Only valid when a rule's action is set to 'resolve'.
+                          Enable to send queries that match the policy to Cloudflare's default 1.1.1.1 DNS resolver. Cannot be set when 'dns_resolvers' are specified or 'resolve_dns_internally' is set. Only valid when a rule's action is set to 'resolve'.
+                        type: boolean
+                      untrustedCert:
+                        description: (Attributes) Configure behavior when an upstream
+                          cert is invalid or an SSL error occurs. (see below for nested
+                          schema)
+                        properties:
+                          action:
+                            description: |-
+                              (String) The action to preform when the associated traffic, identity, and device posture expressions are either absent or evaluate to true.
+                              The action performed when an untrusted certificate is seen. The default action is an error with HTTP code 526.
+                            type: string
+                        type: object
+                    type: object
+                  schedule:
+                    description: (Attributes) The schedule for activating DNS policies.
+                      This does not apply to HTTP or network policies. (see below
+                      for nested schema)
+                    properties:
+                      fri:
+                        description: |-
+                          24:00.  If this parameter is omitted, the rule will be deactivated on Fridays.
+                          The time intervals when the rule will be active on Fridays, in increasing order from 00:00-24:00.  If this parameter is omitted, the rule will be deactivated on Fridays.
+                        type: string
+                      mon:
+                        description: |-
+                          24:00. If this parameter is omitted, the rule will be deactivated on Mondays.
+                          The time intervals when the rule will be active on Mondays, in increasing order from 00:00-24:00. If this parameter is omitted, the rule will be deactivated on Mondays.
+                        type: string
+                      sat:
+                        description: |-
+                          24:00.  If this parameter is omitted, the rule will be deactivated on Saturdays.
+                          The time intervals when the rule will be active on Saturdays, in increasing order from 00:00-24:00.  If this parameter is omitted, the rule will be deactivated on Saturdays.
+                        type: string
+                      sun:
+                        description: |-
+                          24:00. If this parameter is omitted, the rule will be deactivated on Sundays.
+                          The time intervals when the rule will be active on Sundays, in increasing order from 00:00-24:00. If this parameter is omitted, the rule will be deactivated on Sundays.
+                        type: string
+                      thu:
+                        description: |-
+                          24:00. If this parameter is omitted, the rule will be deactivated on Thursdays.
+                          The time intervals when the rule will be active on Thursdays, in increasing order from 00:00-24:00. If this parameter is omitted, the rule will be deactivated on Thursdays.
+                        type: string
+                      timeZone:
+                        description: |-
+                          (String) The time zone the rule will be evaluated against. If a valid time zone city name is provided, Gateway will always use the current time at that time zone. If this parameter is omitted, then Gateway will use the time zone inferred from the user's source IP to evaluate the rule. If Gateway cannot determine the time zone from the IP, we will fall back to the time zone of the user's connected data center.
+                          The time zone the rule will be evaluated against. If a [valid time zone city name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) is provided, Gateway will always use the current time at that time zone. If this parameter is omitted, then Gateway will use the time zone inferred from the user's source IP to evaluate the rule. If Gateway cannot determine the time zone from the IP, we will fall back to the time zone of the user's connected data center.
+                        type: string
+                      tue:
+                        description: |-
+                          24:00. If this parameter is omitted, the rule will be deactivated on Tuesdays.
+                          The time intervals when the rule will be active on Tuesdays, in increasing order from 00:00-24:00. If this parameter is omitted, the rule will be deactivated on Tuesdays.
+                        type: string
+                      wed:
+                        description: |-
+                          24:00. If this parameter is omitted, the rule will be deactivated on Wednesdays.
+                          The time intervals when the rule will be active on Wednesdays, in increasing order from 00:00-24:00. If this parameter is omitted, the rule will be deactivated on Wednesdays.
+                        type: string
+                    type: object
+                  traffic:
+                    description: |-
+                      (String) The wirefilter expression used for traffic matching.
+                      The wirefilter expression used for traffic matching.
+                    type: string
+                type: object
+              managementPolicies:
+                default:
+                - '*'
+                description: |-
+                  THIS IS A BETA FIELD. It is on by default but can be opted out
+                  through a Crossplane feature flag.
+                  ManagementPolicies specify the array of actions Crossplane is allowed to
+                  take on the managed and external resources.
+                  This field is planned to replace the DeletionPolicy field in a future
+                  release. Currently, both could be set independently and non-default
+                  values would be honored if the feature flag is enabled. If both are
+                  custom, the DeletionPolicy field will be ignored.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                  and this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md
+                items:
+                  description: |-
+                    A ManagementAction represents an action that the Crossplane controllers
+                    can take on an external resource.
+                  enum:
+                  - Observe
+                  - Create
+                  - Update
+                  - Delete
+                  - LateInitialize
+                  - '*'
+                  type: string
+                type: array
+              providerConfigRef:
+                default:
+                  name: default
+                description: |-
+                  ProviderConfigReference specifies how the provider that will be used to
+                  create, observe, update, and delete this managed resource should be
+                  configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                  policy:
+                    description: Policies for referencing.
+                    properties:
+                      resolution:
+                        default: Required
+                        description: |-
+                          Resolution specifies whether resolution of this reference is required.
+                          The default is 'Required', which means the reconcile will fail if the
+                          reference cannot be resolved. 'Optional' means this reference will be
+                          a no-op if it cannot be resolved.
+                        enum:
+                        - Required
+                        - Optional
+                        type: string
+                      resolve:
+                        description: |-
+                          Resolve specifies when this reference should be resolved. The default
+                          is 'IfNotPresent', which will attempt to resolve the reference only when
+                          the corresponding field is not present. Use 'Always' to resolve the
+                          reference on every reconcile.
+                        enum:
+                        - Always
+                        - IfNotPresent
+                        type: string
+                    type: object
+                required:
+                - name
+                type: object
+              publishConnectionDetailsTo:
+                description: |-
+                  PublishConnectionDetailsTo specifies the connection secret config which
+                  contains a name, metadata and a reference to secret store config to
+                  which any connection details for this managed resource should be written.
+                  Connection details frequently include the endpoint, username,
+                  and password required to connect to the managed resource.
+                properties:
+                  configRef:
+                    default:
+                      name: default
+                    description: |-
+                      SecretStoreConfigRef specifies which secret store config should be used
+                      for this ConnectionSecret.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  metadata:
+                    description: Metadata is the metadata for connection secret.
+                    properties:
+                      annotations:
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          Annotations are the annotations to be added to connection secret.
+                          - For Kubernetes secrets, this will be used as "metadata.annotations".
+                          - It is up to Secret Store implementation for others store types.
+                        type: object
+                      labels:
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          Labels are the labels/tags to be added to connection secret.
+                          - For Kubernetes secrets, this will be used as "metadata.labels".
+                          - It is up to Secret Store implementation for others store types.
+                        type: object
+                      type:
+                        description: |-
+                          Type is the SecretType for the connection secret.
+                          - Only valid for Kubernetes Secret Stores.
+                        type: string
+                    type: object
+                  name:
+                    description: Name is the name of the connection secret.
+                    type: string
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: |-
+                  WriteConnectionSecretToReference specifies the namespace and name of a
+                  Secret to which any connection details for this managed resource should
+                  be written. Connection details frequently include the endpoint, username,
+                  and password required to connect to the managed resource.
+                  This field is planned to be replaced in a future release in favor of
+                  PublishConnectionDetailsTo. Currently, both could be set independently
+                  and connection details would be published to both without affecting
+                  each other.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+            x-kubernetes-validations:
+            - message: spec.forProvider.accountId is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.accountId)
+                || (has(self.initProvider) && has(self.initProvider.accountId))'
+            - message: spec.forProvider.action is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.action)
+                || (has(self.initProvider) && has(self.initProvider.action))'
+            - message: spec.forProvider.expiration is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.expiration)
+                || (has(self.initProvider) && has(self.initProvider.expiration))'
+            - message: spec.forProvider.ruleSettings is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.ruleSettings)
+                || (has(self.initProvider) && has(self.initProvider.ruleSettings))'
+          status:
+            description: TrustGatewayPolicyStatus defines the observed state of TrustGatewayPolicy.
+            properties:
+              atProvider:
+                properties:
+                  accountId:
+                    description: (String)
+                    type: string
+                  action:
+                    description: |-
+                      (String) The action to preform when the associated traffic, identity, and device posture expressions are either absent or evaluate to true.
+                      The action to preform when the associated traffic, identity, and device posture expressions are either absent or evaluate to `true`.
+                    type: string
+                  createdAt:
+                    description: (String)
+                    type: string
+                  deletedAt:
+                    description: |-
+                      (String) Date of deletion, if any.
+                      Date of deletion, if any.
+                    type: string
+                  description:
+                    description: |-
+                      (String) The description of the rule.
+                      The description of the rule.
+                    type: string
+                  devicePosture:
+                    description: |-
+                      (String) The wirefilter expression used for device posture check matching.
+                      The wirefilter expression used for device posture check matching.
+                    type: string
+                  enabled:
+                    description: |-
+                      (Boolean) True if the rule is enabled.
+                      True if the rule is enabled.
+                    type: boolean
+                  expiration:
+                    description: |-
+                      (Attributes) The expiration time stamp and default duration of a DNS policy. Takes
+                      precedence over the policy's schedule configuration, if any.
+                    properties:
+                      duration:
+                        description: |-
+                          (Number) The default duration a policy will be active in minutes. Must be set in order to use the reset_expiration endpoint on this rule.
+                          The default duration a policy will be active in minutes. Must be set in order to use the `reset_expiration` endpoint on this rule.
+                        type: number
+                      expired:
+                        description: |-
+                          (Boolean) Whether the policy has expired.
+                          Whether the policy has expired.
+                        type: boolean
+                      expiresAt:
+                        description: |-
+                          (String) The time stamp at which the policy will expire and cease to be
+                          applied.
+                          The time stamp at which the policy will expire and cease to be
+                          applied.
+
+
+                          Must adhere to RFC 3339 and include a UTC offset. Non-zero
+                          offsets are accepted but will be converted to the equivalent
+                          value with offset zero (UTC+00:00) and will be returned as time
+                          stamps with offset zero denoted by a trailing 'Z'.
+
+
+                          Policies with an expiration do not consider the timezone of
+                          clients they are applied to, and expire "globally" at the point
+                          given by their `expires_at` value.
+                        type: string
+                    type: object
+                  filters:
+                    description: |-
+                      (List of String) The protocol or layer to evaluate the traffic, identity, and device posture expressions.
+                      The protocol or layer to evaluate the traffic, identity, and device posture expressions.
+                    items:
+                      type: string
+                    type: array
+                  id:
+                    description: (String) The API resource UUID.
+                    type: string
+                  identity:
+                    description: |-
+                      (String) The wirefilter expression used for identity matching.
+                      The wirefilter expression used for identity matching.
+                    type: string
+                  precedence:
+                    description: |-
+                      (Number) Precedence sets the order of your rules. Lower values indicate higher precedence. At each processing phase, applicable rules are evaluated in ascending order of this value.
+                      Precedence sets the order of your rules. Lower values indicate higher precedence. At each processing phase, applicable rules are evaluated in ascending order of this value.
+                    type: number
+                  ruleSettings:
+                    description: (Attributes) Additional settings that modify the
+                      rule's action. (see below for nested schema)
+                    properties:
+                      addHeaders:
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          value pairs. Keys are header names, pointing to an array with its header value(s).
+                          Add custom headers to allowed requests, in the form of key-value pairs. Keys are header names, pointing to an array with its header value(s).
+                        type: object
+                        x-kubernetes-map-type: granular
+                      allowChildBypass:
+                        description: |-
+                          (Boolean) Set by parent MSP accounts to enable their children to bypass this rule.
+                          Set by parent MSP accounts to enable their children to bypass this rule.
+                        type: boolean
+                      auditSsh:
+                        description: (Attributes) Settings for the Audit SSH action.
+                          (see below for nested schema)
+                        properties:
+                          commandLogging:
+                            description: |-
+                              (Boolean) Enable to turn on SSH command logging.
+                              Enable to turn on SSH command logging.
+                            type: boolean
+                        type: object
+                      bisoAdminControls:
+                        description: (Attributes) Configure how browser isolation
+                          behaves. (see below for nested schema)
+                        properties:
+                          copy:
+                            description: |-
+                              (String) Configure whether copy is enabled or not. When set with "remote_only", copying isolated content from the remote browser to the user's local clipboard is disabled. When absent, copy is enabled. Only applies when version == "v2".
+                              Configure whether copy is enabled or not. When set with "remote_only", copying isolated content from the remote browser to the user's local clipboard is disabled. When absent, copy is enabled. Only applies when `version == "v2"`.
+                            type: string
+                          dcp:
+                            description: |-
+                              pasting. Only applies when version == "v1".
+                              Set to false to enable copy-pasting. Only applies when `version == "v1"`.
+                            type: boolean
+                          dd:
+                            description: |-
+                              (Boolean) Set to false to enable downloading. Only applies when version == "v1".
+                              Set to false to enable downloading. Only applies when `version == "v1"`.
+                            type: boolean
+                          dk:
+                            description: |-
+                              (Boolean) Set to false to enable keyboard usage. Only applies when version == "v1".
+                              Set to false to enable keyboard usage. Only applies when `version == "v1"`.
+                            type: boolean
+                          download:
+                            description: |-
+                              (String) Configure whether downloading enabled or not. When absent, downloading is enabled. Only applies when version == "v2".
+                              Configure whether downloading enabled or not. When absent, downloading is enabled. Only applies when `version == "v2"`.
+                            type: string
+                          dp:
+                            description: |-
+                              (Boolean) Set to false to enable printing. Only applies when version == "v1".
+                              Set to false to enable printing. Only applies when `version == "v1"`.
+                            type: boolean
+                          du:
+                            description: |-
+                              (Boolean) Set to false to enable uploading. Only applies when version == "v1".
+                              Set to false to enable uploading. Only applies when `version == "v1"`.
+                            type: boolean
+                          keyboard:
+                            description: |-
+                              (String) Configure whether keyboard usage is enabled or not. When absent, keyboard usage is enabled. Only applies when version == "v2".
+                              Configure whether keyboard usage is enabled or not. When absent, keyboard usage is enabled. Only applies when `version == "v2"`.
+                            type: string
+                          paste:
+                            description: |-
+                              (String) Configure whether pasting is enabled or not. When set with "remote_only", pasting content from the user's local clipboard into isolated pages is disabled. When absent, paste is enabled. Only applies when version == "v2".
+                              Configure whether pasting is enabled or not. When set with "remote_only", pasting content from the user's local clipboard into isolated pages is disabled. When absent, paste is enabled. Only applies when `version == "v2"`.
+                            type: string
+                          printing:
+                            description: |-
+                              (String) Configure whether printing is enabled or not. When absent, printing is enabled. Only applies when version == "v2".
+                              Configure whether printing is enabled or not. When absent, printing is enabled. Only applies when `version == "v2"`.
+                            type: string
+                          upload:
+                            description: |-
+                              (String) Configure whether uploading is enabled or not. When absent, uploading is enabled. Only applies when version == "v2".
+                              Configure whether uploading is enabled or not. When absent, uploading is enabled. Only applies when `version == "v2"`.
+                            type: string
+                          version:
+                            description: |-
+                              (Number) version number of the rule
+                              Indicates which version of the browser isolation controls should apply.
+                            type: string
+                        type: object
+                      blockPageEnabled:
+                        description: |-
+                          (Boolean) Enable the custom block page.
+                          Enable the custom block page.
+                        type: boolean
+                      blockReason:
+                        description: |-
+                          (String) The text describing why this block occurred, displayed on the custom block page (if enabled).
+                          The text describing why this block occurred, displayed on the custom block page (if enabled).
+                        type: string
+                      bypassParentRule:
+                        description: |-
+                          (Boolean) Set by children MSP accounts to bypass their parent's rules.
+                          Set by children MSP accounts to bypass their parent's rules.
+                        type: boolean
+                      checkSession:
+                        description: (Attributes) Configure how session check behaves.
+                          (see below for nested schema)
+                        properties:
+                          duration:
+                            description: |-
+                              (Number) The default duration a policy will be active in minutes. Must be set in order to use the reset_expiration endpoint on this rule.
+                              Configure how fresh the session needs to be to be considered valid.
+                            type: string
+                          enforce:
+                            description: |-
+                              (Boolean) Set to true to enable session enforcement.
+                              Set to true to enable session enforcement.
+                            type: boolean
+                        type: object
+                      dnsResolvers:
+                        description: (Attributes) Add your own custom resolvers to
+                          route queries that match the resolver policy. Cannot be
+                          used when 'resolve_dns_through_cloudflare' or 'resolve_dns_internally'
+                          are set. DNS queries will route to the address closest to
+                          their origin. Only valid when a rule's action is set to
+                          'resolve'. (see below for nested schema)
+                        properties:
+                          ipv4:
+                            description: (Attributes List) (see below for nested schema)
+                            items:
+                              properties:
+                                ip:
+                                  description: |-
+                                    (String) IPv4 address of upstream resolver.
+                                    IPv4 address of upstream resolver.
+                                  type: string
+                                port:
+                                  description: |-
+                                    (Number) A port number to use for upstream resolver. Defaults to 53 if unspecified.
+                                    A port number to use for upstream resolver. Defaults to 53 if unspecified.
+                                  type: number
+                                routeThroughPrivateNetwork:
+                                  description: |-
+                                    (Boolean) Whether to connect to this resolver over a private network. Must be set when vnet_id is set.
+                                    Whether to connect to this resolver over a private network. Must be set when vnet_id is set.
+                                  type: boolean
+                                vnetId:
+                                  description: |-
+                                    (String) Optionally specify a virtual network for this resolver. Uses default virtual network id if omitted.
+                                    Optionally specify a virtual network for this resolver. Uses default virtual network id if omitted.
+                                  type: string
+                              type: object
+                            type: array
+                          ipv6:
+                            description: (Attributes List) (see below for nested schema)
+                            items:
+                              properties:
+                                ip:
+                                  description: |-
+                                    (String) IPv4 address of upstream resolver.
+                                    IPv6 address of upstream resolver.
+                                  type: string
+                                port:
+                                  description: |-
+                                    (Number) A port number to use for upstream resolver. Defaults to 53 if unspecified.
+                                    A port number to use for upstream resolver. Defaults to 53 if unspecified.
+                                  type: number
+                                routeThroughPrivateNetwork:
+                                  description: |-
+                                    (Boolean) Whether to connect to this resolver over a private network. Must be set when vnet_id is set.
+                                    Whether to connect to this resolver over a private network. Must be set when vnet_id is set.
+                                  type: boolean
+                                vnetId:
+                                  description: |-
+                                    (String) Optionally specify a virtual network for this resolver. Uses default virtual network id if omitted.
+                                    Optionally specify a virtual network for this resolver. Uses default virtual network id if omitted.
+                                  type: string
+                              type: object
+                            type: array
+                        type: object
+                      egress:
+                        description: (Attributes) Configure how Gateway Proxy traffic
+                          egresses. You can enable this setting for rules with Egress
+                          actions and filters, or omit it to indicate local egress
+                          via WARP IPs. (see below for nested schema)
+                        properties:
+                          ipv4:
+                            description: |-
+                              (Attributes List) (see below for nested schema)
+                              The IPv4 address to be used for egress.
+                            type: string
+                          ipv4Fallback:
+                            description: |-
+                              (String) The fallback IPv4 address to be used for egress in the event of an error egressing with the primary IPv4. Can be '0.0.0.0' to indicate local egress via WARP IPs.
+                              The fallback IPv4 address to be used for egress in the event of an error egressing with the primary IPv4. Can be '0.0.0.0' to indicate local egress via WARP IPs.
+                            type: string
+                          ipv6:
+                            description: |-
+                              (Attributes List) (see below for nested schema)
+                              The IPv6 range to be used for egress.
+                            type: string
+                        type: object
+                      ignoreCnameCategoryMatches:
+                        description: |-
+                          (Boolean) Set to true, to ignore the category matches at CNAME domains in a response. If unchecked, the categories in this rule will be checked against all the CNAME domain categories in a response.
+                          Set to true, to ignore the category matches at CNAME domains in a response. If unchecked, the categories in this rule will be checked against all the CNAME domain categories in a response.
+                        type: boolean
+                      insecureDisableDnssecValidation:
+                        description: |-
+                          disable DNSSEC validation (for Allow actions).
+                          INSECURE - disable DNSSEC validation (for Allow actions).
+                        type: boolean
+                      ipCategories:
+                        description: |-
+                          (Boolean) Set to true to enable IPs in DNS resolver category blocks. By default categories only block based on domain names.
+                          Set to true to enable IPs in DNS resolver category blocks. By default categories only block based on domain names.
+                        type: boolean
+                      ipIndicatorFeeds:
+                        description: |-
+                          (Boolean) Set to true to include IPs in DNS resolver indicator feed blocks. By default indicator feeds only block based on domain names.
+                          Set to true to include IPs in DNS resolver indicator feed blocks. By default indicator feeds only block based on domain names.
+                        type: boolean
+                      l4override:
+                        description: (Attributes) Send matching traffic to the supplied
+                          destination IP address and port. (see below for nested schema)
+                        properties:
+                          ip:
+                            description: |-
+                              (String) IPv4 address of upstream resolver.
+                              IPv4 or IPv6 address.
+                            type: string
+                          port:
+                            description: |-
+                              (Number) A port number to use for upstream resolver. Defaults to 53 if unspecified.
+                              A port number to use for TCP/UDP overrides.
+                            type: number
+                        type: object
+                      notificationSettings:
+                        description: (Attributes) Configure a notification to display
+                          on the user's device when this rule is matched. (see below
+                          for nested schema)
+                        properties:
+                          enabled:
+                            description: |-
+                              (Boolean) True if the rule is enabled.
+                              Set notification on
+                            type: boolean
+                          msg:
+                            description: |-
+                              (String) Customize the message shown in the notification.
+                              Customize the message shown in the notification.
+                            type: string
+                          supportUrl:
+                            description: |-
+                              (String) Optional URL to direct users to additional information. If not set, the notification will open a block page.
+                              Optional URL to direct users to additional information. If not set, the notification will open a block page.
+                            type: string
+                        type: object
+                      overrideHost:
+                        description: |-
+                          (String) Override matching DNS queries with a hostname.
+                          Override matching DNS queries with a hostname.
+                        type: string
+                      overrideIps:
+                        description: |-
+                          (List of String) Override matching DNS queries with an IP or set of IPs.
+                          Override matching DNS queries with an IP or set of IPs.
+                        items:
+                          type: string
+                        type: array
+                      payloadLog:
+                        description: (Attributes) Configure DLP payload logging. (see
+                          below for nested schema)
+                        properties:
+                          enabled:
+                            description: |-
+                              (Boolean) True if the rule is enabled.
+                              Set to true to enable DLP payload logging for this rule.
+                            type: boolean
+                        type: object
+                      quarantine:
+                        description: (Attributes) Settings that apply to quarantine
+                          rules (see below for nested schema)
+                        properties:
+                          fileTypes:
+                            description: |-
+                              (List of String) Types of files to sandbox.
+                              Types of files to sandbox.
+                            items:
+                              type: string
+                            type: array
+                        type: object
+                      resolveDnsInternally:
+                        description: (Attributes) Configure to forward the query to
+                          the internal DNS service, passing the specified 'view_id'
+                          as input. Cannot be set when 'dns_resolvers' are specified
+                          or 'resolve_dns_through_cloudflare' is set. Only valid when
+                          a rule's action is set to 'resolve'. (see below for nested
+                          schema)
+                        properties:
+                          fallback:
+                            description: |-
+                              (String) The fallback behavior to apply when the internal DNS response code is different from 'NOERROR' or when the response data only contains CNAME records for 'A' or 'AAAA' queries.
+                              The fallback behavior to apply when the internal DNS response code is different from 'NOERROR' or when the response data only contains CNAME records for 'A' or 'AAAA' queries.
+                            type: string
+                          viewId:
+                            description: |-
+                              (String) The internal DNS view identifier that's passed to the internal DNS service.
+                              The internal DNS view identifier that's passed to the internal DNS service.
+                            type: string
+                        type: object
+                      resolveDnsThroughCloudflare:
+                        description: |-
+                          (Boolean) Enable to send queries that match the policy to Cloudflare's default 1.1.1.1 DNS resolver. Cannot be set when 'dns_resolvers' are specified or 'resolve_dns_internally' is set. Only valid when a rule's action is set to 'resolve'.
+                          Enable to send queries that match the policy to Cloudflare's default 1.1.1.1 DNS resolver. Cannot be set when 'dns_resolvers' are specified or 'resolve_dns_internally' is set. Only valid when a rule's action is set to 'resolve'.
+                        type: boolean
+                      untrustedCert:
+                        description: (Attributes) Configure behavior when an upstream
+                          cert is invalid or an SSL error occurs. (see below for nested
+                          schema)
+                        properties:
+                          action:
+                            description: |-
+                              (String) The action to preform when the associated traffic, identity, and device posture expressions are either absent or evaluate to true.
+                              The action performed when an untrusted certificate is seen. The default action is an error with HTTP code 526.
+                            type: string
+                        type: object
+                    type: object
+                  schedule:
+                    description: (Attributes) The schedule for activating DNS policies.
+                      This does not apply to HTTP or network policies. (see below
+                      for nested schema)
+                    properties:
+                      fri:
+                        description: |-
+                          24:00.  If this parameter is omitted, the rule will be deactivated on Fridays.
+                          The time intervals when the rule will be active on Fridays, in increasing order from 00:00-24:00.  If this parameter is omitted, the rule will be deactivated on Fridays.
+                        type: string
+                      mon:
+                        description: |-
+                          24:00. If this parameter is omitted, the rule will be deactivated on Mondays.
+                          The time intervals when the rule will be active on Mondays, in increasing order from 00:00-24:00. If this parameter is omitted, the rule will be deactivated on Mondays.
+                        type: string
+                      sat:
+                        description: |-
+                          24:00.  If this parameter is omitted, the rule will be deactivated on Saturdays.
+                          The time intervals when the rule will be active on Saturdays, in increasing order from 00:00-24:00.  If this parameter is omitted, the rule will be deactivated on Saturdays.
+                        type: string
+                      sun:
+                        description: |-
+                          24:00. If this parameter is omitted, the rule will be deactivated on Sundays.
+                          The time intervals when the rule will be active on Sundays, in increasing order from 00:00-24:00. If this parameter is omitted, the rule will be deactivated on Sundays.
+                        type: string
+                      thu:
+                        description: |-
+                          24:00. If this parameter is omitted, the rule will be deactivated on Thursdays.
+                          The time intervals when the rule will be active on Thursdays, in increasing order from 00:00-24:00. If this parameter is omitted, the rule will be deactivated on Thursdays.
+                        type: string
+                      timeZone:
+                        description: |-
+                          (String) The time zone the rule will be evaluated against. If a valid time zone city name is provided, Gateway will always use the current time at that time zone. If this parameter is omitted, then Gateway will use the time zone inferred from the user's source IP to evaluate the rule. If Gateway cannot determine the time zone from the IP, we will fall back to the time zone of the user's connected data center.
+                          The time zone the rule will be evaluated against. If a [valid time zone city name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) is provided, Gateway will always use the current time at that time zone. If this parameter is omitted, then Gateway will use the time zone inferred from the user's source IP to evaluate the rule. If Gateway cannot determine the time zone from the IP, we will fall back to the time zone of the user's connected data center.
+                        type: string
+                      tue:
+                        description: |-
+                          24:00. If this parameter is omitted, the rule will be deactivated on Tuesdays.
+                          The time intervals when the rule will be active on Tuesdays, in increasing order from 00:00-24:00. If this parameter is omitted, the rule will be deactivated on Tuesdays.
+                        type: string
+                      wed:
+                        description: |-
+                          24:00. If this parameter is omitted, the rule will be deactivated on Wednesdays.
+                          The time intervals when the rule will be active on Wednesdays, in increasing order from 00:00-24:00. If this parameter is omitted, the rule will be deactivated on Wednesdays.
+                        type: string
+                    type: object
+                  traffic:
+                    description: |-
+                      (String) The wirefilter expression used for traffic matching.
+                      The wirefilter expression used for traffic matching.
+                    type: string
+                  updatedAt:
+                    description: (String)
+                    type: string
+                  version:
+                    description: |-
+                      (Number) version number of the rule
+                      version number of the rule
+                    type: number
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        LastTransitionTime is the last time this condition transitioned from one
+                        status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        A Message containing details about this condition's last transition from
+                        one status to another, if any.
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        ObservedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: |-
+                        Type of this condition. At most one of each condition type may apply to
+                        a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              observedGeneration:
+                description: |-
+                  ObservedGeneration is the latest metadata.generation
+                  which resulted in either a ready state, or stalled due to error
+                  it can not recover from without human intervention.
+                format: int64
+                type: integer
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

@@ -1,0 +1,2937 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: rulesets.cloudflare.cloudflare.crossplane.io
+spec:
+  group: cloudflare.cloudflare.crossplane.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - cloudflare-upjet
+    kind: Ruleset
+    listKind: RulesetList
+    plural: rulesets
+    singular: ruleset
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Ruleset is the Schema for the Rulesets API.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: RulesetSpec defines the desired state of Ruleset
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: |-
+                  DeletionPolicy specifies what will happen to the underlying external
+                  when this managed resource is deleted - either "Delete" or "Orphan" the
+                  external resource.
+                  This field is planned to be deprecated in favor of the ManagementPolicies
+                  field in a future release. Currently, both could be set independently and
+                  non-default values would be honored if the feature flag is enabled.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                properties:
+                  accountId:
+                    description: |-
+                      (String) The Account ID to use for this endpoint. Mutually exclusive with the Zone ID.
+                      The Account ID to use for this endpoint. Mutually exclusive with the Zone ID.
+                    type: string
+                  description:
+                    description: |-
+                      (String) An informative description of the ruleset.
+                      An informative description of the ruleset.
+                    type: string
+                  kind:
+                    description: |-
+                      (String) The kind of the ruleset.
+                      The kind of the ruleset.
+                    type: string
+                  phase:
+                    description: |-
+                      (String) The phase of the ruleset.
+                      The phase of the ruleset.
+                    type: string
+                  rules:
+                    description: (Attributes List) The list of rules in the ruleset.
+                      (see below for nested schema)
+                    items:
+                      properties:
+                        action:
+                          description: |-
+                            (String) The action to perform when the rule matches.
+                            The action to perform when the rule matches.
+                          type: string
+                        actionParameters:
+                          description: (Attributes) The parameters configuring the
+                            rule's action. (see below for nested schema)
+                          properties:
+                            additionalCacheablePorts:
+                              description: |-
+                                (List of Number) List of additional ports that caching can be enabled on.
+                                List of additional ports that caching can be enabled on.
+                              items:
+                                type: number
+                              type: array
+                            algorithms:
+                              description: (Attributes List) Custom order for compression
+                                algorithms. (see below for nested schema)
+                              items:
+                                properties:
+                                  name:
+                                    description: |-
+                                      readable name of the ruleset.
+                                      Name of compression algorithm to enable.
+                                    type: string
+                                type: object
+                              type: array
+                            automaticHttpsRewrites:
+                              description: |-
+                                (Boolean) Turn on or off Automatic HTTPS Rewrites.
+                                Turn on or off Automatic HTTPS Rewrites.
+                              type: boolean
+                            autominify:
+                              description: (Attributes) Select which file extensions
+                                to minify automatically. (see below for nested schema)
+                              properties:
+                                css:
+                                  description: |-
+                                    (Boolean) Minify CSS files.
+                                    Minify CSS files.
+                                  type: boolean
+                                html:
+                                  description: |-
+                                    (Boolean) Minify HTML files.
+                                    Minify HTML files.
+                                  type: boolean
+                                js:
+                                  description: |-
+                                    (Boolean) Minify JS files.
+                                    Minify JS files.
+                                  type: boolean
+                              type: object
+                            bic:
+                              description: |-
+                                (Boolean) Turn on or off Browser Integrity Check.
+                                Turn on or off Browser Integrity Check.
+                              type: boolean
+                            browserTtl:
+                              description: (Attributes) Specify how long client browsers
+                                should cache the response. Cloudflare cache purge
+                                will not purge content cached on client browsers,
+                                so high browser TTLs may lead to stale content. (see
+                                below for nested schema)
+                              properties:
+                                default:
+                                  description: |-
+                                    (Number) The TTL (in seconds) if you choose override_origin mode.
+                                    The TTL (in seconds) if you choose override_origin mode.
+                                  type: number
+                                mode:
+                                  description: |-
+                                    (String) Determines which browser ttl mode to use.
+                                    Determines which browser ttl mode to use.
+                                  type: string
+                              type: object
+                            cache:
+                              description: |-
+                                control header and your other caching configurations.
+                                Mark whether the request’s response from origin is eligible for caching. Caching itself will still depend on the cache-control header and your other caching configurations.
+                              type: boolean
+                            cacheKey:
+                              description: (Attributes) Define which components of
+                                the request are included or excluded from the cache
+                                key Cloudflare uses to store the response in cache.
+                                (see below for nested schema)
+                              properties:
+                                cacheByDeviceType:
+                                  description: |-
+                                    (Boolean) Separate cached content based on the visitor’s device type
+                                    Separate cached content based on the visitor’s device type
+                                  type: boolean
+                                cacheDeceptionArmor:
+                                  description: |-
+                                    (Boolean) Protect from web cache deception attacks while allowing static assets to be cached
+                                    Protect from web cache deception attacks while allowing static assets to be cached
+                                  type: boolean
+                                customKey:
+                                  description: (Attributes) Customize which components
+                                    of the request are included or excluded from the
+                                    cache key. (see below for nested schema)
+                                  properties:
+                                    cookie:
+                                      description: (Attributes) The cookies to include
+                                        in building the cache key. (see below for
+                                        nested schema)
+                                      properties:
+                                        checkPresence:
+                                          description: |-
+                                            (List of String) Checks for the presence of these cookie names. The presence of these cookies is used in building the cache key.
+                                            Checks for the presence of these cookie names. The presence of these cookies is used in building the cache key.
+                                          items:
+                                            type: string
+                                          type: array
+                                        include:
+                                          description: |-
+                                            (List of String) Include these cookies' names and their values.
+                                            Include these cookies' names and their values.
+                                          items:
+                                            type: string
+                                          type: array
+                                      type: object
+                                    header:
+                                      description: (Attributes) The header names and
+                                        values to include in building the cache key.
+                                        (see below for nested schema)
+                                      properties:
+                                        checkPresence:
+                                          description: |-
+                                            (List of String) Checks for the presence of these cookie names. The presence of these cookies is used in building the cache key.
+                                            Checks for the presence of these header names. The presence of these headers is used in building the cache key.
+                                          items:
+                                            type: string
+                                          type: array
+                                        contains:
+                                          additionalProperties:
+                                            items:
+                                              type: string
+                                            type: array
+                                          description: |-
+                                            (Map of List of String) For each header name and list of values combination, check if the request header contains any of the values provided. The presence of the request header and whether any of the values provided are contained in the request header value is used in building the cache key.
+                                            For each header name and list of values combination, check if the request header contains any of the values provided. The presence of the request header and whether any of the values provided are contained in the request header value is used in building the cache key.
+                                          type: object
+                                        excludeOrigin:
+                                          description: |-
+                                            (Boolean) Whether or not to include the origin header. A value of true will exclude the origin header in the cache key.
+                                            Whether or not to include the origin header. A value of true will exclude the origin header in the cache key.
+                                          type: boolean
+                                        include:
+                                          description: |-
+                                            (List of String) Include these cookies' names and their values.
+                                            Include these headers' names and their values.
+                                          items:
+                                            type: string
+                                          type: array
+                                      type: object
+                                    host:
+                                      description: (Attributes) Whether to use the
+                                        original host or the resolved host in the
+                                        cache key. (see below for nested schema)
+                                      properties:
+                                        resolved:
+                                          description: |-
+                                            (Boolean) Use the resolved host in the cache key. A value of true will use the resolved host, while a value or false will use the original host.
+                                            Use the resolved host in the cache key. A value of true will use the resolved host, while a value or false will use the original host.
+                                          type: boolean
+                                      type: object
+                                    queryString:
+                                      description: (Attributes) Use the presence of
+                                        parameters in the query string to build the
+                                        cache key. (see below for nested schema)
+                                      properties:
+                                        exclude:
+                                          description: (Attributes) A list of query
+                                            string parameters NOT used to build the
+                                            cache key. All parameters present in the
+                                            request but missing in this list will
+                                            be used to build the cache key. (see below
+                                            for nested schema)
+                                          properties:
+                                            all:
+                                              description: |-
+                                                (Boolean) Determines whether to exclude all query string parameters from the cache key.
+                                                Determines whether to exclude all query string parameters from the cache key.
+                                              type: boolean
+                                            list:
+                                              description: (List of String)
+                                              items:
+                                                type: string
+                                              type: array
+                                          type: object
+                                        include:
+                                          description: (List of String) Include these
+                                            cookies' names and their values.
+                                          properties:
+                                            all:
+                                              description: |-
+                                                (Boolean) Determines whether to exclude all query string parameters from the cache key.
+                                                Determines whether to include all query string parameters in the cache key.
+                                              type: boolean
+                                            list:
+                                              description: (List of String)
+                                              items:
+                                                type: string
+                                              type: array
+                                          type: object
+                                      type: object
+                                    user:
+                                      description: (Attributes) Characteristics of
+                                        the request user agent used in building the
+                                        cache key. (see below for nested schema)
+                                      properties:
+                                        deviceType:
+                                          description: |-
+                                            (Boolean) Use the user agent's device type in the cache key.
+                                            Use the user agent's device type in the cache key.
+                                          type: boolean
+                                        geo:
+                                          description: |-
+                                            (Boolean) Use the user agents's country in the cache key.
+                                            Use the user agents's country in the cache key.
+                                          type: boolean
+                                        lang:
+                                          description: |-
+                                            (Boolean) Use the user agent's language in the cache key.
+                                            Use the user agent's language in the cache key.
+                                          type: boolean
+                                      type: object
+                                  type: object
+                                ignoreQueryStringsOrder:
+                                  description: |-
+                                    (Boolean) Treat requests with the same query parameters the same, regardless of the order those query parameters are in. A value of true ignores the query strings' order.
+                                    Treat requests with the same query parameters the same, regardless of the order those query parameters are in. A value of true ignores the query strings' order.
+                                  type: boolean
+                              type: object
+                            cacheReserve:
+                              description: on plan). (see below for nested schema)
+                              properties:
+                                eligible:
+                                  description: |-
+                                    (Boolean) Determines whether cache reserve is enabled. If this is true and a request meets eligibility criteria, Cloudflare will write the resource to cache reserve.
+                                    Determines whether cache reserve is enabled. If this is true and a request meets eligibility criteria, Cloudflare will write the resource to cache reserve.
+                                  type: boolean
+                                minimumFileSize:
+                                  description: |-
+                                    (Number) The minimum file size eligible for store in cache reserve.
+                                    The minimum file size eligible for store in cache reserve.
+                                  type: number
+                              type: object
+                            content:
+                              description: |-
+                                (String) Error response content.
+                                Error response content.
+                              type: string
+                            contentType:
+                              description: |-
+                                type header to set with the response.
+                                Content-type header to set with the response.
+                              type: string
+                            cookieFields:
+                              description: (Attributes List) The cookie fields to
+                                log. (see below for nested schema)
+                              items:
+                                properties:
+                                  name:
+                                    description: |-
+                                      readable name of the ruleset.
+                                      The name of the field.
+                                    type: string
+                                type: object
+                              type: array
+                            disableApps:
+                              description: |-
+                                (Boolean) Turn off all active Cloudflare Apps.
+                                Turn off all active Cloudflare Apps.
+                              type: boolean
+                            disableRum:
+                              description: |-
+                                (Boolean) Turn off Real User Monitoring (RUM).
+                                Turn off Real User Monitoring (RUM).
+                              type: boolean
+                            disableZaraz:
+                              description: |-
+                                (Boolean) Turn off Zaraz.
+                                Turn off Zaraz.
+                              type: boolean
+                            edgeTtl:
+                              description: (Attributes) TTL (Time to Live) specifies
+                                the maximum time to cache a resource in the Cloudflare
+                                edge network. (see below for nested schema)
+                              properties:
+                                default:
+                                  description: |-
+                                    (Number) The TTL (in seconds) if you choose override_origin mode.
+                                    The TTL (in seconds) if you choose override_origin mode.
+                                  type: number
+                                mode:
+                                  description: |-
+                                    (String) Determines which browser ttl mode to use.
+                                    edge ttl options
+                                  type: string
+                                statusCodeTtl:
+                                  description: (Attributes List) List of single status
+                                    codes, or status code ranges to apply the selected
+                                    mode (see below for nested schema)
+                                  items:
+                                    properties:
+                                      statusCode:
+                                        description: |-
+                                          (Number) The status code to use for the error.
+                                          Set the ttl for responses with this specific status code
+                                        type: number
+                                      statusCodeRange:
+                                        description: (Attributes) The range of status
+                                          codes used to apply the selected mode. (see
+                                          below for nested schema)
+                                        properties:
+                                          from:
+                                            description: |-
+                                              (Number) response status code lower bound
+                                              response status code lower bound
+                                            type: number
+                                          to:
+                                            description: |-
+                                              (Number) response status code upper bound
+                                              response status code upper bound
+                                            type: number
+                                        type: object
+                                      value:
+                                        description: |-
+                                          Control header with the value "no-cache". A value of -1 is equivalent to setting Cache-Control header with the value of "no-store".
+                                          Time to cache a response (in seconds). A value of 0 is equivalent to setting the Cache-Control header with the value "no-cache". A value of -1 is equivalent to setting Cache-Control header with the value of "no-store".
+                                        type: number
+                                    type: object
+                                  type: array
+                              type: object
+                            emailObfuscation:
+                              description: |-
+                                (Boolean) Turn on or off Email Obfuscation.
+                                Turn on or off Email Obfuscation.
+                              type: boolean
+                            fonts:
+                              description: |-
+                                (Boolean) Turn on or off Cloudflare Fonts.
+                                Turn on or off Cloudflare Fonts.
+                              type: boolean
+                            fromList:
+                              description: (Attributes) Serve a redirect based on
+                                a bulk list lookup. (see below for nested schema)
+                              properties:
+                                key:
+                                  description: |-
+                                    (String) Expression that evaluates to the list lookup key.
+                                    Expression that evaluates to the list lookup key.
+                                  type: string
+                                name:
+                                  description: |-
+                                    readable name of the ruleset.
+                                    The name of the list to match against.
+                                  type: string
+                              type: object
+                            fromValue:
+                              description: (Attributes) Serve a redirect based on
+                                the request properties. (see below for nested schema)
+                              properties:
+                                preserveQueryString:
+                                  description: |-
+                                    (Boolean) Keep the query string of the original request.
+                                    Keep the query string of the original request.
+                                  type: boolean
+                                statusCode:
+                                  description: |-
+                                    (Number) The status code to use for the error.
+                                    The status code to be used for the redirect.
+                                  type: number
+                                targetUrl:
+                                  description: (Attributes) The URL to redirect the
+                                    request to. (see below for nested schema)
+                                  properties:
+                                    expression:
+                                      description: |-
+                                        (String) The expression defining which traffic will match the rule.
+                                        An expression to evaluate to get the URL to redirect the request to.
+                                      type: string
+                                    value:
+                                      description: |-
+                                        Control header with the value "no-cache". A value of -1 is equivalent to setting Cache-Control header with the value of "no-store".
+                                        The URL to redirect the request to.
+                                      type: string
+                                  type: object
+                              type: object
+                            headers:
+                              additionalProperties:
+                                properties:
+                                  expression:
+                                    description: |-
+                                      (String) The expression defining which traffic will match the rule.
+                                      Expression for the header value.
+                                    type: string
+                                  operation:
+                                    description: (String)
+                                    type: string
+                                  value:
+                                    description: |-
+                                      Control header with the value "no-cache". A value of -1 is equivalent to setting Cache-Control header with the value of "no-store".
+                                      Static value for the header.
+                                    type: string
+                                type: object
+                              description: (Attributes Map) Map of request headers
+                                to modify. (see below for nested schema)
+                              type: object
+                            hostHeader:
+                              description: |-
+                                (String) Rewrite the HTTP Host header.
+                                Rewrite the HTTP Host header.
+                              type: string
+                            hotlinkProtection:
+                              description: |-
+                                (Boolean) Turn on or off the Hotlink Protection.
+                                Turn on or off the Hotlink Protection.
+                              type: boolean
+                            id:
+                              description: |-
+                                (String) The unique ID of the ruleset.
+                                The ID of the ruleset to execute.
+                              type: string
+                            increment:
+                              description: |-
+                                (Number) Increment contains the delta to change the score and can be either positive or negative.
+                                Increment contains the delta to change the score and can be either positive or negative.
+                              type: number
+                            matchedData:
+                              description: (Attributes) The configuration to use for
+                                matched data logging. (see below for nested schema)
+                              properties:
+                                publicKey:
+                                  description: |-
+                                    (String) The public key to encrypt matched data logs with.
+                                    The public key to encrypt matched data logs with.
+                                  type: string
+                              type: object
+                            mirage:
+                              description: |-
+                                (Boolean) Turn on or off Mirage.
+                                Turn on or off Mirage.
+                              type: boolean
+                            opportunisticEncryption:
+                              description: |-
+                                (Boolean) Turn on or off Opportunistic Encryption.
+                                Turn on or off Opportunistic Encryption.
+                              type: boolean
+                            origin:
+                              description: (Attributes) Override the IP/TCP destination.
+                                (see below for nested schema)
+                              properties:
+                                host:
+                                  description: |-
+                                    (Attributes) Whether to use the original host or the resolved host in the cache key. (see below for nested schema)
+                                    Override the resolved hostname.
+                                  type: string
+                                port:
+                                  description: |-
+                                    (Number) Override the destination port.
+                                    Override the destination port.
+                                  type: number
+                              type: object
+                            originCacheControl:
+                              description: |-
+                                (Boolean) When enabled, Cloudflare will aim to strictly adhere to RFC 7234.
+                                When enabled, Cloudflare will aim to strictly adhere to RFC 7234.
+                              type: boolean
+                            originErrorPagePassthru:
+                              description: |-
+                                (Boolean) Generate Cloudflare error pages from issues sent from the origin server. When on, error pages will trigger for issues from the origin
+                                Generate Cloudflare error pages from issues sent from the origin server. When on, error pages will trigger for issues from the origin
+                              type: boolean
+                            overrides:
+                              description: (Attributes) A set of overrides to apply
+                                to the target ruleset. (see below for nested schema)
+                              properties:
+                                action:
+                                  description: |-
+                                    (String) The action to perform when the rule matches.
+                                    An action to override all rules with. This option has lower precedence than rule and category overrides.
+                                  type: string
+                                categories:
+                                  description: (List of String) The categories of
+                                    the rule.
+                                  items:
+                                    properties:
+                                      action:
+                                        description: |-
+                                          (String) The action to perform when the rule matches.
+                                          The action to override rules in the category with.
+                                        type: string
+                                      category:
+                                        description: |-
+                                          (String) The name of the category to override.
+                                          The name of the category to override.
+                                        type: string
+                                      enabled:
+                                        description: |-
+                                          (Boolean) Whether the rule should be executed.
+                                          Whether to enable execution of rules in the category.
+                                        type: boolean
+                                      sensitivityLevel:
+                                        description: |-
+                                          (String) A sensitivity level to set for all rules. This option has lower precedence than rule and category overrides and is only applicable for DDoS phases.
+                                          The sensitivity level to use for rules in the category.
+                                        type: string
+                                    type: object
+                                  type: array
+                                enabled:
+                                  description: |-
+                                    (Boolean) Whether the rule should be executed.
+                                    Whether to enable execution of all rules. This option has lower precedence than rule and category overrides.
+                                  type: boolean
+                                rules:
+                                  description: (Attributes List) The list of rules
+                                    in the ruleset. (see below for nested schema)
+                                  items:
+                                    properties:
+                                      action:
+                                        description: |-
+                                          (String) The action to perform when the rule matches.
+                                          The action to override the rule with.
+                                        type: string
+                                      enabled:
+                                        description: |-
+                                          (Boolean) Whether the rule should be executed.
+                                          Whether to enable execution of the rule.
+                                        type: boolean
+                                      id:
+                                        description: |-
+                                          (String) The unique ID of the ruleset.
+                                          The ID of the rule to override.
+                                        type: string
+                                      scoreThreshold:
+                                        description: |-
+                                          (Number) The score threshold to use for the rule.
+                                          The score threshold to use for the rule.
+                                        type: number
+                                      sensitivityLevel:
+                                        description: |-
+                                          (String) A sensitivity level to set for all rules. This option has lower precedence than rule and category overrides and is only applicable for DDoS phases.
+                                          The sensitivity level to use for the rule.
+                                        type: string
+                                    type: object
+                                  type: array
+                                sensitivityLevel:
+                                  description: |-
+                                    (String) A sensitivity level to set for all rules. This option has lower precedence than rule and category overrides and is only applicable for DDoS phases.
+                                    A sensitivity level to set for all rules. This option has lower precedence than rule and category overrides and is only applicable for DDoS phases.
+                                  type: string
+                              type: object
+                            phases:
+                              description: |-
+                                (List of String) A list of phases to skip the execution of. This option is incompatible with the ruleset and rulesets options.
+                                A list of phases to skip the execution of. This option is incompatible with the ruleset and rulesets options.
+                              items:
+                                type: string
+                              type: array
+                            polish:
+                              description: |-
+                                (String) Configure the Polish level.
+                                Configure the Polish level.
+                              type: string
+                            products:
+                              description: |-
+                                (List of String) A list of legacy security products to skip the execution of.
+                                A list of legacy security products to skip the execution of.
+                              items:
+                                type: string
+                              type: array
+                            readTimeout:
+                              description: |-
+                                (Number) Define a timeout value between two successive read operations to your origin server. Historically, the timeout value between two read options from Cloudflare to an origin server is 100 seconds. If you are attempting to reduce HTTP 524 errors because of timeouts from an origin server, try increasing this timeout value.
+                                Define a timeout value between two successive read operations to your origin server. Historically, the timeout value between two read options from Cloudflare to an origin server is 100 seconds. If you are attempting to reduce HTTP 524 errors because of timeouts from an origin server, try increasing this timeout value.
+                              type: number
+                            requestFields:
+                              description: (Attributes List) The request fields to
+                                log. (see below for nested schema)
+                              items:
+                                properties:
+                                  name:
+                                    description: |-
+                                      readable name of the ruleset.
+                                      The name of the field.
+                                    type: string
+                                type: object
+                              type: array
+                            respectStrongEtags:
+                              description: |-
+                                (Boolean) Specify whether or not Cloudflare should respect strong ETag (entity tag) headers. When off, Cloudflare converts strong ETag headers to weak ETag headers.
+                                Specify whether or not Cloudflare should respect strong ETag (entity tag) headers. When off, Cloudflare converts strong ETag headers to weak ETag headers.
+                              type: boolean
+                            response:
+                              description: (Attributes) The response to show when
+                                the block is applied. (see below for nested schema)
+                              properties:
+                                content:
+                                  description: |-
+                                    (String) Error response content.
+                                    The content to return.
+                                  type: string
+                                contentType:
+                                  description: |-
+                                    type header to set with the response.
+                                    The type of the content to return.
+                                  type: string
+                                statusCode:
+                                  description: |-
+                                    (Number) The status code to use for the error.
+                                    The status code to return.
+                                  type: number
+                              type: object
+                            responseFields:
+                              description: (Attributes List) The response fields to
+                                log. (see below for nested schema)
+                              items:
+                                properties:
+                                  name:
+                                    description: |-
+                                      readable name of the ruleset.
+                                      The name of the field.
+                                    type: string
+                                type: object
+                              type: array
+                            rocketLoader:
+                              description: |-
+                                (Boolean) Turn on or off Rocket Loader
+                                Turn on or off Rocket Loader
+                              type: boolean
+                            rules:
+                              additionalProperties:
+                                items:
+                                  type: string
+                                type: array
+                              description: |-
+                                (Attributes List) The list of rules in the ruleset. (see below for nested schema)
+                                A mapping of ruleset IDs to a list of rule IDs in that ruleset to skip the execution of. This option is incompatible with the ruleset option.
+                              type: object
+                            ruleset:
+                              description: |-
+                                (String) A ruleset to skip the execution of. This option is incompatible with the rulesets, rules and phases options.
+                                A ruleset to skip the execution of. This option is incompatible with the rulesets, rules and phases options.
+                              type: string
+                            rulesets:
+                              description: |-
+                                (List of String) A list of ruleset IDs to skip the execution of. This option is incompatible with the ruleset and phases options.
+                                A list of ruleset IDs to skip the execution of. This option is incompatible with the ruleset and phases options.
+                              items:
+                                type: string
+                              type: array
+                            securityLevel:
+                              description: |-
+                                (String) Configure the Security Level.
+                                Configure the Security Level.
+                              type: string
+                            serveStale:
+                              description: (Attributes) Define if Cloudflare should
+                                serve stale content while getting the latest content
+                                from the origin. If on, Cloudflare will not serve
+                                stale content while getting the latest content from
+                                the origin. (see below for nested schema)
+                              properties:
+                                disableStaleWhileUpdating:
+                                  description: |-
+                                    (Boolean) Defines whether Cloudflare should serve stale content while updating. If true, Cloudflare will not serve stale content while getting the latest content from the origin.
+                                    Defines whether Cloudflare should serve stale content while updating. If true, Cloudflare will not serve stale content while getting the latest content from the origin.
+                                  type: boolean
+                              type: object
+                            serverSideExcludes:
+                              description: |-
+                                (Boolean) Turn on or off Server Side Excludes.
+                                Turn on or off Server Side Excludes.
+                              type: boolean
+                            sni:
+                              description: (Attributes) Override the Server Name Indication
+                                (SNI). (see below for nested schema)
+                              properties:
+                                value:
+                                  description: |-
+                                    Control header with the value "no-cache". A value of -1 is equivalent to setting Cache-Control header with the value of "no-store".
+                                    The SNI override.
+                                  type: string
+                              type: object
+                            ssl:
+                              description: |-
+                                (String) Configure the SSL level.
+                                Configure the SSL level.
+                              type: string
+                            statusCode:
+                              description: |-
+                                (Number) The status code to use for the error.
+                                The status code to use for the error.
+                              type: number
+                            sxg:
+                              description: |-
+                                (Boolean) Turn on or off Signed Exchanges (SXG).
+                                Turn on or off Signed Exchanges (SXG).
+                              type: boolean
+                            uri:
+                              description: (Attributes) URI to rewrite the request
+                                to. (see below for nested schema)
+                              properties:
+                                path:
+                                  description: (Attributes) Path portion rewrite.
+                                    (see below for nested schema)
+                                  properties:
+                                    expression:
+                                      description: |-
+                                        (String) The expression defining which traffic will match the rule.
+                                        Expression to evaluate for the replacement value.
+                                      type: string
+                                    value:
+                                      description: |-
+                                        Control header with the value "no-cache". A value of -1 is equivalent to setting Cache-Control header with the value of "no-store".
+                                        Predefined replacement value.
+                                      type: string
+                                  type: object
+                                query:
+                                  description: (Attributes) Query portion rewrite.
+                                    (see below for nested schema)
+                                  properties:
+                                    expression:
+                                      description: |-
+                                        (String) The expression defining which traffic will match the rule.
+                                        Expression to evaluate for the replacement value.
+                                      type: string
+                                    value:
+                                      description: |-
+                                        Control header with the value "no-cache". A value of -1 is equivalent to setting Cache-Control header with the value of "no-store".
+                                        Predefined replacement value.
+                                      type: string
+                                  type: object
+                              type: object
+                          type: object
+                        description:
+                          description: |-
+                            (String) An informative description of the ruleset.
+                            An informative description of the rule.
+                          type: string
+                        enabled:
+                          description: |-
+                            (Boolean) Whether the rule should be executed.
+                            Whether the rule should be executed.
+                          type: boolean
+                        exposedCredentialCheck:
+                          description: (Attributes) Configure checks for exposed credentials.
+                            (see below for nested schema)
+                          properties:
+                            passwordExpression:
+                              description: |-
+                                (String) Expression that selects the password used in the credentials check.
+                                Expression that selects the password used in the credentials check.
+                              type: string
+                            usernameExpression:
+                              description: |-
+                                (String) Expression that selects the user ID used in the credentials check.
+                                Expression that selects the user ID used in the credentials check.
+                              type: string
+                          type: object
+                        expression:
+                          description: |-
+                            (String) The expression defining which traffic will match the rule.
+                            The expression defining which traffic will match the rule.
+                          type: string
+                        logging:
+                          description: (Attributes) An object configuring the rule's
+                            logging behavior. (see below for nested schema)
+                          properties:
+                            enabled:
+                              description: |-
+                                (Boolean) Whether the rule should be executed.
+                                Whether to generate a log when the rule matches.
+                              type: boolean
+                          type: object
+                        ratelimit:
+                          description: (Attributes) An object configuring the rule's
+                            ratelimit behavior. (see below for nested schema)
+                          properties:
+                            characteristics:
+                              description: |-
+                                (List of String) Characteristics of the request on which the ratelimiter counter will be incremented.
+                                Characteristics of the request on which the ratelimiter counter will be incremented.
+                              items:
+                                type: string
+                              type: array
+                            countingExpression:
+                              description: |-
+                                (String) Defines when the ratelimit counter should be incremented. It is optional and defaults to the same as the rule's expression.
+                                Defines when the ratelimit counter should be incremented. It is optional and defaults to the same as the rule's expression.
+                              type: string
+                            mitigationTimeout:
+                              description: |-
+                                (Number) Period of time in seconds after which the action will be disabled following its first execution.
+                                Period of time in seconds after which the action will be disabled following its first execution.
+                              type: number
+                            period:
+                              description: |-
+                                (Number) Period in seconds over which the counter is being incremented.
+                                Period in seconds over which the counter is being incremented.
+                              type: number
+                            requestsPerPeriod:
+                              description: |-
+                                (Number) The threshold of requests per period after which the action will be executed for the first time.
+                                The threshold of requests per period after which the action will be executed for the first time.
+                              type: number
+                            requestsToOrigin:
+                              description: |-
+                                (Boolean) Defines if ratelimit counting is only done when an origin is reached.
+                                Defines if ratelimit counting is only done when an origin is reached.
+                              type: boolean
+                            scorePerPeriod:
+                              description: |-
+                                (Number) The score threshold per period for which the action will be executed the first time.
+                                The score threshold per period for which the action will be executed the first time.
+                              type: number
+                            scoreResponseHeaderName:
+                              description: |-
+                                (String) The response header name provided by the origin which should contain the score to increment ratelimit counter on.
+                                The response header name provided by the origin which should contain the score to increment ratelimit counter on.
+                              type: string
+                          type: object
+                        ref:
+                          description: |-
+                            (String) The reference of the rule (the rule ID by default).
+                            The reference of the rule (the rule ID by default).
+                          type: string
+                      type: object
+                    type: array
+                  zoneId:
+                    description: |-
+                      (String) The Zone ID to use for this endpoint. Mutually exclusive with the Account ID.
+                      The Zone ID to use for this endpoint. Mutually exclusive with the Account ID.
+                    type: string
+                type: object
+              initProvider:
+                description: |-
+                  THIS IS A BETA FIELD. It will be honored
+                  unless the Management Policies feature flag is disabled.
+                  InitProvider holds the same fields as ForProvider, with the exception
+                  of Identifier and other resource reference fields. The fields that are
+                  in InitProvider are merged into ForProvider when the resource is created.
+                  The same fields are also added to the terraform ignore_changes hook, to
+                  avoid updating them after creation. This is useful for fields that are
+                  required on creation, but we do not desire to update them after creation,
+                  for example because of an external controller is managing them, like an
+                  autoscaler.
+                properties:
+                  accountId:
+                    description: |-
+                      (String) The Account ID to use for this endpoint. Mutually exclusive with the Zone ID.
+                      The Account ID to use for this endpoint. Mutually exclusive with the Zone ID.
+                    type: string
+                  description:
+                    description: |-
+                      (String) An informative description of the ruleset.
+                      An informative description of the ruleset.
+                    type: string
+                  kind:
+                    description: |-
+                      (String) The kind of the ruleset.
+                      The kind of the ruleset.
+                    type: string
+                  phase:
+                    description: |-
+                      (String) The phase of the ruleset.
+                      The phase of the ruleset.
+                    type: string
+                  rules:
+                    description: (Attributes List) The list of rules in the ruleset.
+                      (see below for nested schema)
+                    items:
+                      properties:
+                        action:
+                          description: |-
+                            (String) The action to perform when the rule matches.
+                            The action to perform when the rule matches.
+                          type: string
+                        actionParameters:
+                          description: (Attributes) The parameters configuring the
+                            rule's action. (see below for nested schema)
+                          properties:
+                            additionalCacheablePorts:
+                              description: |-
+                                (List of Number) List of additional ports that caching can be enabled on.
+                                List of additional ports that caching can be enabled on.
+                              items:
+                                type: number
+                              type: array
+                            algorithms:
+                              description: (Attributes List) Custom order for compression
+                                algorithms. (see below for nested schema)
+                              items:
+                                properties:
+                                  name:
+                                    description: |-
+                                      readable name of the ruleset.
+                                      Name of compression algorithm to enable.
+                                    type: string
+                                type: object
+                              type: array
+                            automaticHttpsRewrites:
+                              description: |-
+                                (Boolean) Turn on or off Automatic HTTPS Rewrites.
+                                Turn on or off Automatic HTTPS Rewrites.
+                              type: boolean
+                            autominify:
+                              description: (Attributes) Select which file extensions
+                                to minify automatically. (see below for nested schema)
+                              properties:
+                                css:
+                                  description: |-
+                                    (Boolean) Minify CSS files.
+                                    Minify CSS files.
+                                  type: boolean
+                                html:
+                                  description: |-
+                                    (Boolean) Minify HTML files.
+                                    Minify HTML files.
+                                  type: boolean
+                                js:
+                                  description: |-
+                                    (Boolean) Minify JS files.
+                                    Minify JS files.
+                                  type: boolean
+                              type: object
+                            bic:
+                              description: |-
+                                (Boolean) Turn on or off Browser Integrity Check.
+                                Turn on or off Browser Integrity Check.
+                              type: boolean
+                            browserTtl:
+                              description: (Attributes) Specify how long client browsers
+                                should cache the response. Cloudflare cache purge
+                                will not purge content cached on client browsers,
+                                so high browser TTLs may lead to stale content. (see
+                                below for nested schema)
+                              properties:
+                                default:
+                                  description: |-
+                                    (Number) The TTL (in seconds) if you choose override_origin mode.
+                                    The TTL (in seconds) if you choose override_origin mode.
+                                  type: number
+                                mode:
+                                  description: |-
+                                    (String) Determines which browser ttl mode to use.
+                                    Determines which browser ttl mode to use.
+                                  type: string
+                              type: object
+                            cache:
+                              description: |-
+                                control header and your other caching configurations.
+                                Mark whether the request’s response from origin is eligible for caching. Caching itself will still depend on the cache-control header and your other caching configurations.
+                              type: boolean
+                            cacheKey:
+                              description: (Attributes) Define which components of
+                                the request are included or excluded from the cache
+                                key Cloudflare uses to store the response in cache.
+                                (see below for nested schema)
+                              properties:
+                                cacheByDeviceType:
+                                  description: |-
+                                    (Boolean) Separate cached content based on the visitor’s device type
+                                    Separate cached content based on the visitor’s device type
+                                  type: boolean
+                                cacheDeceptionArmor:
+                                  description: |-
+                                    (Boolean) Protect from web cache deception attacks while allowing static assets to be cached
+                                    Protect from web cache deception attacks while allowing static assets to be cached
+                                  type: boolean
+                                customKey:
+                                  description: (Attributes) Customize which components
+                                    of the request are included or excluded from the
+                                    cache key. (see below for nested schema)
+                                  properties:
+                                    cookie:
+                                      description: (Attributes) The cookies to include
+                                        in building the cache key. (see below for
+                                        nested schema)
+                                      properties:
+                                        checkPresence:
+                                          description: |-
+                                            (List of String) Checks for the presence of these cookie names. The presence of these cookies is used in building the cache key.
+                                            Checks for the presence of these cookie names. The presence of these cookies is used in building the cache key.
+                                          items:
+                                            type: string
+                                          type: array
+                                        include:
+                                          description: |-
+                                            (List of String) Include these cookies' names and their values.
+                                            Include these cookies' names and their values.
+                                          items:
+                                            type: string
+                                          type: array
+                                      type: object
+                                    header:
+                                      description: (Attributes) The header names and
+                                        values to include in building the cache key.
+                                        (see below for nested schema)
+                                      properties:
+                                        checkPresence:
+                                          description: |-
+                                            (List of String) Checks for the presence of these cookie names. The presence of these cookies is used in building the cache key.
+                                            Checks for the presence of these header names. The presence of these headers is used in building the cache key.
+                                          items:
+                                            type: string
+                                          type: array
+                                        contains:
+                                          additionalProperties:
+                                            items:
+                                              type: string
+                                            type: array
+                                          description: |-
+                                            (Map of List of String) For each header name and list of values combination, check if the request header contains any of the values provided. The presence of the request header and whether any of the values provided are contained in the request header value is used in building the cache key.
+                                            For each header name and list of values combination, check if the request header contains any of the values provided. The presence of the request header and whether any of the values provided are contained in the request header value is used in building the cache key.
+                                          type: object
+                                        excludeOrigin:
+                                          description: |-
+                                            (Boolean) Whether or not to include the origin header. A value of true will exclude the origin header in the cache key.
+                                            Whether or not to include the origin header. A value of true will exclude the origin header in the cache key.
+                                          type: boolean
+                                        include:
+                                          description: |-
+                                            (List of String) Include these cookies' names and their values.
+                                            Include these headers' names and their values.
+                                          items:
+                                            type: string
+                                          type: array
+                                      type: object
+                                    host:
+                                      description: (Attributes) Whether to use the
+                                        original host or the resolved host in the
+                                        cache key. (see below for nested schema)
+                                      properties:
+                                        resolved:
+                                          description: |-
+                                            (Boolean) Use the resolved host in the cache key. A value of true will use the resolved host, while a value or false will use the original host.
+                                            Use the resolved host in the cache key. A value of true will use the resolved host, while a value or false will use the original host.
+                                          type: boolean
+                                      type: object
+                                    queryString:
+                                      description: (Attributes) Use the presence of
+                                        parameters in the query string to build the
+                                        cache key. (see below for nested schema)
+                                      properties:
+                                        exclude:
+                                          description: (Attributes) A list of query
+                                            string parameters NOT used to build the
+                                            cache key. All parameters present in the
+                                            request but missing in this list will
+                                            be used to build the cache key. (see below
+                                            for nested schema)
+                                          properties:
+                                            all:
+                                              description: |-
+                                                (Boolean) Determines whether to exclude all query string parameters from the cache key.
+                                                Determines whether to exclude all query string parameters from the cache key.
+                                              type: boolean
+                                            list:
+                                              description: (List of String)
+                                              items:
+                                                type: string
+                                              type: array
+                                          type: object
+                                        include:
+                                          description: (List of String) Include these
+                                            cookies' names and their values.
+                                          properties:
+                                            all:
+                                              description: |-
+                                                (Boolean) Determines whether to exclude all query string parameters from the cache key.
+                                                Determines whether to include all query string parameters in the cache key.
+                                              type: boolean
+                                            list:
+                                              description: (List of String)
+                                              items:
+                                                type: string
+                                              type: array
+                                          type: object
+                                      type: object
+                                    user:
+                                      description: (Attributes) Characteristics of
+                                        the request user agent used in building the
+                                        cache key. (see below for nested schema)
+                                      properties:
+                                        deviceType:
+                                          description: |-
+                                            (Boolean) Use the user agent's device type in the cache key.
+                                            Use the user agent's device type in the cache key.
+                                          type: boolean
+                                        geo:
+                                          description: |-
+                                            (Boolean) Use the user agents's country in the cache key.
+                                            Use the user agents's country in the cache key.
+                                          type: boolean
+                                        lang:
+                                          description: |-
+                                            (Boolean) Use the user agent's language in the cache key.
+                                            Use the user agent's language in the cache key.
+                                          type: boolean
+                                      type: object
+                                  type: object
+                                ignoreQueryStringsOrder:
+                                  description: |-
+                                    (Boolean) Treat requests with the same query parameters the same, regardless of the order those query parameters are in. A value of true ignores the query strings' order.
+                                    Treat requests with the same query parameters the same, regardless of the order those query parameters are in. A value of true ignores the query strings' order.
+                                  type: boolean
+                              type: object
+                            cacheReserve:
+                              description: on plan). (see below for nested schema)
+                              properties:
+                                eligible:
+                                  description: |-
+                                    (Boolean) Determines whether cache reserve is enabled. If this is true and a request meets eligibility criteria, Cloudflare will write the resource to cache reserve.
+                                    Determines whether cache reserve is enabled. If this is true and a request meets eligibility criteria, Cloudflare will write the resource to cache reserve.
+                                  type: boolean
+                                minimumFileSize:
+                                  description: |-
+                                    (Number) The minimum file size eligible for store in cache reserve.
+                                    The minimum file size eligible for store in cache reserve.
+                                  type: number
+                              type: object
+                            content:
+                              description: |-
+                                (String) Error response content.
+                                Error response content.
+                              type: string
+                            contentType:
+                              description: |-
+                                type header to set with the response.
+                                Content-type header to set with the response.
+                              type: string
+                            cookieFields:
+                              description: (Attributes List) The cookie fields to
+                                log. (see below for nested schema)
+                              items:
+                                properties:
+                                  name:
+                                    description: |-
+                                      readable name of the ruleset.
+                                      The name of the field.
+                                    type: string
+                                type: object
+                              type: array
+                            disableApps:
+                              description: |-
+                                (Boolean) Turn off all active Cloudflare Apps.
+                                Turn off all active Cloudflare Apps.
+                              type: boolean
+                            disableRum:
+                              description: |-
+                                (Boolean) Turn off Real User Monitoring (RUM).
+                                Turn off Real User Monitoring (RUM).
+                              type: boolean
+                            disableZaraz:
+                              description: |-
+                                (Boolean) Turn off Zaraz.
+                                Turn off Zaraz.
+                              type: boolean
+                            edgeTtl:
+                              description: (Attributes) TTL (Time to Live) specifies
+                                the maximum time to cache a resource in the Cloudflare
+                                edge network. (see below for nested schema)
+                              properties:
+                                default:
+                                  description: |-
+                                    (Number) The TTL (in seconds) if you choose override_origin mode.
+                                    The TTL (in seconds) if you choose override_origin mode.
+                                  type: number
+                                mode:
+                                  description: |-
+                                    (String) Determines which browser ttl mode to use.
+                                    edge ttl options
+                                  type: string
+                                statusCodeTtl:
+                                  description: (Attributes List) List of single status
+                                    codes, or status code ranges to apply the selected
+                                    mode (see below for nested schema)
+                                  items:
+                                    properties:
+                                      statusCode:
+                                        description: |-
+                                          (Number) The status code to use for the error.
+                                          Set the ttl for responses with this specific status code
+                                        type: number
+                                      statusCodeRange:
+                                        description: (Attributes) The range of status
+                                          codes used to apply the selected mode. (see
+                                          below for nested schema)
+                                        properties:
+                                          from:
+                                            description: |-
+                                              (Number) response status code lower bound
+                                              response status code lower bound
+                                            type: number
+                                          to:
+                                            description: |-
+                                              (Number) response status code upper bound
+                                              response status code upper bound
+                                            type: number
+                                        type: object
+                                      value:
+                                        description: |-
+                                          Control header with the value "no-cache". A value of -1 is equivalent to setting Cache-Control header with the value of "no-store".
+                                          Time to cache a response (in seconds). A value of 0 is equivalent to setting the Cache-Control header with the value "no-cache". A value of -1 is equivalent to setting Cache-Control header with the value of "no-store".
+                                        type: number
+                                    type: object
+                                  type: array
+                              type: object
+                            emailObfuscation:
+                              description: |-
+                                (Boolean) Turn on or off Email Obfuscation.
+                                Turn on or off Email Obfuscation.
+                              type: boolean
+                            fonts:
+                              description: |-
+                                (Boolean) Turn on or off Cloudflare Fonts.
+                                Turn on or off Cloudflare Fonts.
+                              type: boolean
+                            fromList:
+                              description: (Attributes) Serve a redirect based on
+                                a bulk list lookup. (see below for nested schema)
+                              properties:
+                                key:
+                                  description: |-
+                                    (String) Expression that evaluates to the list lookup key.
+                                    Expression that evaluates to the list lookup key.
+                                  type: string
+                                name:
+                                  description: |-
+                                    readable name of the ruleset.
+                                    The name of the list to match against.
+                                  type: string
+                              type: object
+                            fromValue:
+                              description: (Attributes) Serve a redirect based on
+                                the request properties. (see below for nested schema)
+                              properties:
+                                preserveQueryString:
+                                  description: |-
+                                    (Boolean) Keep the query string of the original request.
+                                    Keep the query string of the original request.
+                                  type: boolean
+                                statusCode:
+                                  description: |-
+                                    (Number) The status code to use for the error.
+                                    The status code to be used for the redirect.
+                                  type: number
+                                targetUrl:
+                                  description: (Attributes) The URL to redirect the
+                                    request to. (see below for nested schema)
+                                  properties:
+                                    expression:
+                                      description: |-
+                                        (String) The expression defining which traffic will match the rule.
+                                        An expression to evaluate to get the URL to redirect the request to.
+                                      type: string
+                                    value:
+                                      description: |-
+                                        Control header with the value "no-cache". A value of -1 is equivalent to setting Cache-Control header with the value of "no-store".
+                                        The URL to redirect the request to.
+                                      type: string
+                                  type: object
+                              type: object
+                            headers:
+                              additionalProperties:
+                                properties:
+                                  expression:
+                                    description: |-
+                                      (String) The expression defining which traffic will match the rule.
+                                      Expression for the header value.
+                                    type: string
+                                  operation:
+                                    description: (String)
+                                    type: string
+                                  value:
+                                    description: |-
+                                      Control header with the value "no-cache". A value of -1 is equivalent to setting Cache-Control header with the value of "no-store".
+                                      Static value for the header.
+                                    type: string
+                                type: object
+                              description: (Attributes Map) Map of request headers
+                                to modify. (see below for nested schema)
+                              type: object
+                            hostHeader:
+                              description: |-
+                                (String) Rewrite the HTTP Host header.
+                                Rewrite the HTTP Host header.
+                              type: string
+                            hotlinkProtection:
+                              description: |-
+                                (Boolean) Turn on or off the Hotlink Protection.
+                                Turn on or off the Hotlink Protection.
+                              type: boolean
+                            id:
+                              description: |-
+                                (String) The unique ID of the ruleset.
+                                The ID of the ruleset to execute.
+                              type: string
+                            increment:
+                              description: |-
+                                (Number) Increment contains the delta to change the score and can be either positive or negative.
+                                Increment contains the delta to change the score and can be either positive or negative.
+                              type: number
+                            matchedData:
+                              description: (Attributes) The configuration to use for
+                                matched data logging. (see below for nested schema)
+                              properties:
+                                publicKey:
+                                  description: |-
+                                    (String) The public key to encrypt matched data logs with.
+                                    The public key to encrypt matched data logs with.
+                                  type: string
+                              type: object
+                            mirage:
+                              description: |-
+                                (Boolean) Turn on or off Mirage.
+                                Turn on or off Mirage.
+                              type: boolean
+                            opportunisticEncryption:
+                              description: |-
+                                (Boolean) Turn on or off Opportunistic Encryption.
+                                Turn on or off Opportunistic Encryption.
+                              type: boolean
+                            origin:
+                              description: (Attributes) Override the IP/TCP destination.
+                                (see below for nested schema)
+                              properties:
+                                host:
+                                  description: |-
+                                    (Attributes) Whether to use the original host or the resolved host in the cache key. (see below for nested schema)
+                                    Override the resolved hostname.
+                                  type: string
+                                port:
+                                  description: |-
+                                    (Number) Override the destination port.
+                                    Override the destination port.
+                                  type: number
+                              type: object
+                            originCacheControl:
+                              description: |-
+                                (Boolean) When enabled, Cloudflare will aim to strictly adhere to RFC 7234.
+                                When enabled, Cloudflare will aim to strictly adhere to RFC 7234.
+                              type: boolean
+                            originErrorPagePassthru:
+                              description: |-
+                                (Boolean) Generate Cloudflare error pages from issues sent from the origin server. When on, error pages will trigger for issues from the origin
+                                Generate Cloudflare error pages from issues sent from the origin server. When on, error pages will trigger for issues from the origin
+                              type: boolean
+                            overrides:
+                              description: (Attributes) A set of overrides to apply
+                                to the target ruleset. (see below for nested schema)
+                              properties:
+                                action:
+                                  description: |-
+                                    (String) The action to perform when the rule matches.
+                                    An action to override all rules with. This option has lower precedence than rule and category overrides.
+                                  type: string
+                                categories:
+                                  description: (List of String) The categories of
+                                    the rule.
+                                  items:
+                                    properties:
+                                      action:
+                                        description: |-
+                                          (String) The action to perform when the rule matches.
+                                          The action to override rules in the category with.
+                                        type: string
+                                      category:
+                                        description: |-
+                                          (String) The name of the category to override.
+                                          The name of the category to override.
+                                        type: string
+                                      enabled:
+                                        description: |-
+                                          (Boolean) Whether the rule should be executed.
+                                          Whether to enable execution of rules in the category.
+                                        type: boolean
+                                      sensitivityLevel:
+                                        description: |-
+                                          (String) A sensitivity level to set for all rules. This option has lower precedence than rule and category overrides and is only applicable for DDoS phases.
+                                          The sensitivity level to use for rules in the category.
+                                        type: string
+                                    type: object
+                                  type: array
+                                enabled:
+                                  description: |-
+                                    (Boolean) Whether the rule should be executed.
+                                    Whether to enable execution of all rules. This option has lower precedence than rule and category overrides.
+                                  type: boolean
+                                rules:
+                                  description: (Attributes List) The list of rules
+                                    in the ruleset. (see below for nested schema)
+                                  items:
+                                    properties:
+                                      action:
+                                        description: |-
+                                          (String) The action to perform when the rule matches.
+                                          The action to override the rule with.
+                                        type: string
+                                      enabled:
+                                        description: |-
+                                          (Boolean) Whether the rule should be executed.
+                                          Whether to enable execution of the rule.
+                                        type: boolean
+                                      id:
+                                        description: |-
+                                          (String) The unique ID of the ruleset.
+                                          The ID of the rule to override.
+                                        type: string
+                                      scoreThreshold:
+                                        description: |-
+                                          (Number) The score threshold to use for the rule.
+                                          The score threshold to use for the rule.
+                                        type: number
+                                      sensitivityLevel:
+                                        description: |-
+                                          (String) A sensitivity level to set for all rules. This option has lower precedence than rule and category overrides and is only applicable for DDoS phases.
+                                          The sensitivity level to use for the rule.
+                                        type: string
+                                    type: object
+                                  type: array
+                                sensitivityLevel:
+                                  description: |-
+                                    (String) A sensitivity level to set for all rules. This option has lower precedence than rule and category overrides and is only applicable for DDoS phases.
+                                    A sensitivity level to set for all rules. This option has lower precedence than rule and category overrides and is only applicable for DDoS phases.
+                                  type: string
+                              type: object
+                            phases:
+                              description: |-
+                                (List of String) A list of phases to skip the execution of. This option is incompatible with the ruleset and rulesets options.
+                                A list of phases to skip the execution of. This option is incompatible with the ruleset and rulesets options.
+                              items:
+                                type: string
+                              type: array
+                            polish:
+                              description: |-
+                                (String) Configure the Polish level.
+                                Configure the Polish level.
+                              type: string
+                            products:
+                              description: |-
+                                (List of String) A list of legacy security products to skip the execution of.
+                                A list of legacy security products to skip the execution of.
+                              items:
+                                type: string
+                              type: array
+                            readTimeout:
+                              description: |-
+                                (Number) Define a timeout value between two successive read operations to your origin server. Historically, the timeout value between two read options from Cloudflare to an origin server is 100 seconds. If you are attempting to reduce HTTP 524 errors because of timeouts from an origin server, try increasing this timeout value.
+                                Define a timeout value between two successive read operations to your origin server. Historically, the timeout value between two read options from Cloudflare to an origin server is 100 seconds. If you are attempting to reduce HTTP 524 errors because of timeouts from an origin server, try increasing this timeout value.
+                              type: number
+                            requestFields:
+                              description: (Attributes List) The request fields to
+                                log. (see below for nested schema)
+                              items:
+                                properties:
+                                  name:
+                                    description: |-
+                                      readable name of the ruleset.
+                                      The name of the field.
+                                    type: string
+                                type: object
+                              type: array
+                            respectStrongEtags:
+                              description: |-
+                                (Boolean) Specify whether or not Cloudflare should respect strong ETag (entity tag) headers. When off, Cloudflare converts strong ETag headers to weak ETag headers.
+                                Specify whether or not Cloudflare should respect strong ETag (entity tag) headers. When off, Cloudflare converts strong ETag headers to weak ETag headers.
+                              type: boolean
+                            response:
+                              description: (Attributes) The response to show when
+                                the block is applied. (see below for nested schema)
+                              properties:
+                                content:
+                                  description: |-
+                                    (String) Error response content.
+                                    The content to return.
+                                  type: string
+                                contentType:
+                                  description: |-
+                                    type header to set with the response.
+                                    The type of the content to return.
+                                  type: string
+                                statusCode:
+                                  description: |-
+                                    (Number) The status code to use for the error.
+                                    The status code to return.
+                                  type: number
+                              type: object
+                            responseFields:
+                              description: (Attributes List) The response fields to
+                                log. (see below for nested schema)
+                              items:
+                                properties:
+                                  name:
+                                    description: |-
+                                      readable name of the ruleset.
+                                      The name of the field.
+                                    type: string
+                                type: object
+                              type: array
+                            rocketLoader:
+                              description: |-
+                                (Boolean) Turn on or off Rocket Loader
+                                Turn on or off Rocket Loader
+                              type: boolean
+                            rules:
+                              additionalProperties:
+                                items:
+                                  type: string
+                                type: array
+                              description: |-
+                                (Attributes List) The list of rules in the ruleset. (see below for nested schema)
+                                A mapping of ruleset IDs to a list of rule IDs in that ruleset to skip the execution of. This option is incompatible with the ruleset option.
+                              type: object
+                            ruleset:
+                              description: |-
+                                (String) A ruleset to skip the execution of. This option is incompatible with the rulesets, rules and phases options.
+                                A ruleset to skip the execution of. This option is incompatible with the rulesets, rules and phases options.
+                              type: string
+                            rulesets:
+                              description: |-
+                                (List of String) A list of ruleset IDs to skip the execution of. This option is incompatible with the ruleset and phases options.
+                                A list of ruleset IDs to skip the execution of. This option is incompatible with the ruleset and phases options.
+                              items:
+                                type: string
+                              type: array
+                            securityLevel:
+                              description: |-
+                                (String) Configure the Security Level.
+                                Configure the Security Level.
+                              type: string
+                            serveStale:
+                              description: (Attributes) Define if Cloudflare should
+                                serve stale content while getting the latest content
+                                from the origin. If on, Cloudflare will not serve
+                                stale content while getting the latest content from
+                                the origin. (see below for nested schema)
+                              properties:
+                                disableStaleWhileUpdating:
+                                  description: |-
+                                    (Boolean) Defines whether Cloudflare should serve stale content while updating. If true, Cloudflare will not serve stale content while getting the latest content from the origin.
+                                    Defines whether Cloudflare should serve stale content while updating. If true, Cloudflare will not serve stale content while getting the latest content from the origin.
+                                  type: boolean
+                              type: object
+                            serverSideExcludes:
+                              description: |-
+                                (Boolean) Turn on or off Server Side Excludes.
+                                Turn on or off Server Side Excludes.
+                              type: boolean
+                            sni:
+                              description: (Attributes) Override the Server Name Indication
+                                (SNI). (see below for nested schema)
+                              properties:
+                                value:
+                                  description: |-
+                                    Control header with the value "no-cache". A value of -1 is equivalent to setting Cache-Control header with the value of "no-store".
+                                    The SNI override.
+                                  type: string
+                              type: object
+                            ssl:
+                              description: |-
+                                (String) Configure the SSL level.
+                                Configure the SSL level.
+                              type: string
+                            statusCode:
+                              description: |-
+                                (Number) The status code to use for the error.
+                                The status code to use for the error.
+                              type: number
+                            sxg:
+                              description: |-
+                                (Boolean) Turn on or off Signed Exchanges (SXG).
+                                Turn on or off Signed Exchanges (SXG).
+                              type: boolean
+                            uri:
+                              description: (Attributes) URI to rewrite the request
+                                to. (see below for nested schema)
+                              properties:
+                                path:
+                                  description: (Attributes) Path portion rewrite.
+                                    (see below for nested schema)
+                                  properties:
+                                    expression:
+                                      description: |-
+                                        (String) The expression defining which traffic will match the rule.
+                                        Expression to evaluate for the replacement value.
+                                      type: string
+                                    value:
+                                      description: |-
+                                        Control header with the value "no-cache". A value of -1 is equivalent to setting Cache-Control header with the value of "no-store".
+                                        Predefined replacement value.
+                                      type: string
+                                  type: object
+                                query:
+                                  description: (Attributes) Query portion rewrite.
+                                    (see below for nested schema)
+                                  properties:
+                                    expression:
+                                      description: |-
+                                        (String) The expression defining which traffic will match the rule.
+                                        Expression to evaluate for the replacement value.
+                                      type: string
+                                    value:
+                                      description: |-
+                                        Control header with the value "no-cache". A value of -1 is equivalent to setting Cache-Control header with the value of "no-store".
+                                        Predefined replacement value.
+                                      type: string
+                                  type: object
+                              type: object
+                          type: object
+                        description:
+                          description: |-
+                            (String) An informative description of the ruleset.
+                            An informative description of the rule.
+                          type: string
+                        enabled:
+                          description: |-
+                            (Boolean) Whether the rule should be executed.
+                            Whether the rule should be executed.
+                          type: boolean
+                        exposedCredentialCheck:
+                          description: (Attributes) Configure checks for exposed credentials.
+                            (see below for nested schema)
+                          properties:
+                            passwordExpression:
+                              description: |-
+                                (String) Expression that selects the password used in the credentials check.
+                                Expression that selects the password used in the credentials check.
+                              type: string
+                            usernameExpression:
+                              description: |-
+                                (String) Expression that selects the user ID used in the credentials check.
+                                Expression that selects the user ID used in the credentials check.
+                              type: string
+                          type: object
+                        expression:
+                          description: |-
+                            (String) The expression defining which traffic will match the rule.
+                            The expression defining which traffic will match the rule.
+                          type: string
+                        logging:
+                          description: (Attributes) An object configuring the rule's
+                            logging behavior. (see below for nested schema)
+                          properties:
+                            enabled:
+                              description: |-
+                                (Boolean) Whether the rule should be executed.
+                                Whether to generate a log when the rule matches.
+                              type: boolean
+                          type: object
+                        ratelimit:
+                          description: (Attributes) An object configuring the rule's
+                            ratelimit behavior. (see below for nested schema)
+                          properties:
+                            characteristics:
+                              description: |-
+                                (List of String) Characteristics of the request on which the ratelimiter counter will be incremented.
+                                Characteristics of the request on which the ratelimiter counter will be incremented.
+                              items:
+                                type: string
+                              type: array
+                            countingExpression:
+                              description: |-
+                                (String) Defines when the ratelimit counter should be incremented. It is optional and defaults to the same as the rule's expression.
+                                Defines when the ratelimit counter should be incremented. It is optional and defaults to the same as the rule's expression.
+                              type: string
+                            mitigationTimeout:
+                              description: |-
+                                (Number) Period of time in seconds after which the action will be disabled following its first execution.
+                                Period of time in seconds after which the action will be disabled following its first execution.
+                              type: number
+                            period:
+                              description: |-
+                                (Number) Period in seconds over which the counter is being incremented.
+                                Period in seconds over which the counter is being incremented.
+                              type: number
+                            requestsPerPeriod:
+                              description: |-
+                                (Number) The threshold of requests per period after which the action will be executed for the first time.
+                                The threshold of requests per period after which the action will be executed for the first time.
+                              type: number
+                            requestsToOrigin:
+                              description: |-
+                                (Boolean) Defines if ratelimit counting is only done when an origin is reached.
+                                Defines if ratelimit counting is only done when an origin is reached.
+                              type: boolean
+                            scorePerPeriod:
+                              description: |-
+                                (Number) The score threshold per period for which the action will be executed the first time.
+                                The score threshold per period for which the action will be executed the first time.
+                              type: number
+                            scoreResponseHeaderName:
+                              description: |-
+                                (String) The response header name provided by the origin which should contain the score to increment ratelimit counter on.
+                                The response header name provided by the origin which should contain the score to increment ratelimit counter on.
+                              type: string
+                          type: object
+                        ref:
+                          description: |-
+                            (String) The reference of the rule (the rule ID by default).
+                            The reference of the rule (the rule ID by default).
+                          type: string
+                      type: object
+                    type: array
+                  zoneId:
+                    description: |-
+                      (String) The Zone ID to use for this endpoint. Mutually exclusive with the Account ID.
+                      The Zone ID to use for this endpoint. Mutually exclusive with the Account ID.
+                    type: string
+                type: object
+              managementPolicies:
+                default:
+                - '*'
+                description: |-
+                  THIS IS A BETA FIELD. It is on by default but can be opted out
+                  through a Crossplane feature flag.
+                  ManagementPolicies specify the array of actions Crossplane is allowed to
+                  take on the managed and external resources.
+                  This field is planned to replace the DeletionPolicy field in a future
+                  release. Currently, both could be set independently and non-default
+                  values would be honored if the feature flag is enabled. If both are
+                  custom, the DeletionPolicy field will be ignored.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                  and this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md
+                items:
+                  description: |-
+                    A ManagementAction represents an action that the Crossplane controllers
+                    can take on an external resource.
+                  enum:
+                  - Observe
+                  - Create
+                  - Update
+                  - Delete
+                  - LateInitialize
+                  - '*'
+                  type: string
+                type: array
+              providerConfigRef:
+                default:
+                  name: default
+                description: |-
+                  ProviderConfigReference specifies how the provider that will be used to
+                  create, observe, update, and delete this managed resource should be
+                  configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                  policy:
+                    description: Policies for referencing.
+                    properties:
+                      resolution:
+                        default: Required
+                        description: |-
+                          Resolution specifies whether resolution of this reference is required.
+                          The default is 'Required', which means the reconcile will fail if the
+                          reference cannot be resolved. 'Optional' means this reference will be
+                          a no-op if it cannot be resolved.
+                        enum:
+                        - Required
+                        - Optional
+                        type: string
+                      resolve:
+                        description: |-
+                          Resolve specifies when this reference should be resolved. The default
+                          is 'IfNotPresent', which will attempt to resolve the reference only when
+                          the corresponding field is not present. Use 'Always' to resolve the
+                          reference on every reconcile.
+                        enum:
+                        - Always
+                        - IfNotPresent
+                        type: string
+                    type: object
+                required:
+                - name
+                type: object
+              publishConnectionDetailsTo:
+                description: |-
+                  PublishConnectionDetailsTo specifies the connection secret config which
+                  contains a name, metadata and a reference to secret store config to
+                  which any connection details for this managed resource should be written.
+                  Connection details frequently include the endpoint, username,
+                  and password required to connect to the managed resource.
+                properties:
+                  configRef:
+                    default:
+                      name: default
+                    description: |-
+                      SecretStoreConfigRef specifies which secret store config should be used
+                      for this ConnectionSecret.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  metadata:
+                    description: Metadata is the metadata for connection secret.
+                    properties:
+                      annotations:
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          Annotations are the annotations to be added to connection secret.
+                          - For Kubernetes secrets, this will be used as "metadata.annotations".
+                          - It is up to Secret Store implementation for others store types.
+                        type: object
+                      labels:
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          Labels are the labels/tags to be added to connection secret.
+                          - For Kubernetes secrets, this will be used as "metadata.labels".
+                          - It is up to Secret Store implementation for others store types.
+                        type: object
+                      type:
+                        description: |-
+                          Type is the SecretType for the connection secret.
+                          - Only valid for Kubernetes Secret Stores.
+                        type: string
+                    type: object
+                  name:
+                    description: Name is the name of the connection secret.
+                    type: string
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: |-
+                  WriteConnectionSecretToReference specifies the namespace and name of a
+                  Secret to which any connection details for this managed resource should
+                  be written. Connection details frequently include the endpoint, username,
+                  and password required to connect to the managed resource.
+                  This field is planned to be replaced in a future release in favor of
+                  PublishConnectionDetailsTo. Currently, both could be set independently
+                  and connection details would be published to both without affecting
+                  each other.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+            x-kubernetes-validations:
+            - message: spec.forProvider.kind is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.kind)
+                || (has(self.initProvider) && has(self.initProvider.kind))'
+            - message: spec.forProvider.phase is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.phase)
+                || (has(self.initProvider) && has(self.initProvider.phase))'
+            - message: spec.forProvider.rules is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.rules)
+                || (has(self.initProvider) && has(self.initProvider.rules))'
+          status:
+            description: RulesetStatus defines the observed state of Ruleset.
+            properties:
+              atProvider:
+                properties:
+                  accountId:
+                    description: |-
+                      (String) The Account ID to use for this endpoint. Mutually exclusive with the Zone ID.
+                      The Account ID to use for this endpoint. Mutually exclusive with the Zone ID.
+                    type: string
+                  description:
+                    description: |-
+                      (String) An informative description of the ruleset.
+                      An informative description of the ruleset.
+                    type: string
+                  id:
+                    description: (String) The unique ID of the ruleset.
+                    type: string
+                  kind:
+                    description: |-
+                      (String) The kind of the ruleset.
+                      The kind of the ruleset.
+                    type: string
+                  phase:
+                    description: |-
+                      (String) The phase of the ruleset.
+                      The phase of the ruleset.
+                    type: string
+                  rules:
+                    description: (Attributes List) The list of rules in the ruleset.
+                      (see below for nested schema)
+                    items:
+                      properties:
+                        action:
+                          description: |-
+                            (String) The action to perform when the rule matches.
+                            The action to perform when the rule matches.
+                          type: string
+                        actionParameters:
+                          description: (Attributes) The parameters configuring the
+                            rule's action. (see below for nested schema)
+                          properties:
+                            additionalCacheablePorts:
+                              description: |-
+                                (List of Number) List of additional ports that caching can be enabled on.
+                                List of additional ports that caching can be enabled on.
+                              items:
+                                type: number
+                              type: array
+                            algorithms:
+                              description: (Attributes List) Custom order for compression
+                                algorithms. (see below for nested schema)
+                              items:
+                                properties:
+                                  name:
+                                    description: |-
+                                      readable name of the ruleset.
+                                      Name of compression algorithm to enable.
+                                    type: string
+                                type: object
+                              type: array
+                            automaticHttpsRewrites:
+                              description: |-
+                                (Boolean) Turn on or off Automatic HTTPS Rewrites.
+                                Turn on or off Automatic HTTPS Rewrites.
+                              type: boolean
+                            autominify:
+                              description: (Attributes) Select which file extensions
+                                to minify automatically. (see below for nested schema)
+                              properties:
+                                css:
+                                  description: |-
+                                    (Boolean) Minify CSS files.
+                                    Minify CSS files.
+                                  type: boolean
+                                html:
+                                  description: |-
+                                    (Boolean) Minify HTML files.
+                                    Minify HTML files.
+                                  type: boolean
+                                js:
+                                  description: |-
+                                    (Boolean) Minify JS files.
+                                    Minify JS files.
+                                  type: boolean
+                              type: object
+                            bic:
+                              description: |-
+                                (Boolean) Turn on or off Browser Integrity Check.
+                                Turn on or off Browser Integrity Check.
+                              type: boolean
+                            browserTtl:
+                              description: (Attributes) Specify how long client browsers
+                                should cache the response. Cloudflare cache purge
+                                will not purge content cached on client browsers,
+                                so high browser TTLs may lead to stale content. (see
+                                below for nested schema)
+                              properties:
+                                default:
+                                  description: |-
+                                    (Number) The TTL (in seconds) if you choose override_origin mode.
+                                    The TTL (in seconds) if you choose override_origin mode.
+                                  type: number
+                                mode:
+                                  description: |-
+                                    (String) Determines which browser ttl mode to use.
+                                    Determines which browser ttl mode to use.
+                                  type: string
+                              type: object
+                            cache:
+                              description: |-
+                                control header and your other caching configurations.
+                                Mark whether the request’s response from origin is eligible for caching. Caching itself will still depend on the cache-control header and your other caching configurations.
+                              type: boolean
+                            cacheKey:
+                              description: (Attributes) Define which components of
+                                the request are included or excluded from the cache
+                                key Cloudflare uses to store the response in cache.
+                                (see below for nested schema)
+                              properties:
+                                cacheByDeviceType:
+                                  description: |-
+                                    (Boolean) Separate cached content based on the visitor’s device type
+                                    Separate cached content based on the visitor’s device type
+                                  type: boolean
+                                cacheDeceptionArmor:
+                                  description: |-
+                                    (Boolean) Protect from web cache deception attacks while allowing static assets to be cached
+                                    Protect from web cache deception attacks while allowing static assets to be cached
+                                  type: boolean
+                                customKey:
+                                  description: (Attributes) Customize which components
+                                    of the request are included or excluded from the
+                                    cache key. (see below for nested schema)
+                                  properties:
+                                    cookie:
+                                      description: (Attributes) The cookies to include
+                                        in building the cache key. (see below for
+                                        nested schema)
+                                      properties:
+                                        checkPresence:
+                                          description: |-
+                                            (List of String) Checks for the presence of these cookie names. The presence of these cookies is used in building the cache key.
+                                            Checks for the presence of these cookie names. The presence of these cookies is used in building the cache key.
+                                          items:
+                                            type: string
+                                          type: array
+                                        include:
+                                          description: |-
+                                            (List of String) Include these cookies' names and their values.
+                                            Include these cookies' names and their values.
+                                          items:
+                                            type: string
+                                          type: array
+                                      type: object
+                                    header:
+                                      description: (Attributes) The header names and
+                                        values to include in building the cache key.
+                                        (see below for nested schema)
+                                      properties:
+                                        checkPresence:
+                                          description: |-
+                                            (List of String) Checks for the presence of these cookie names. The presence of these cookies is used in building the cache key.
+                                            Checks for the presence of these header names. The presence of these headers is used in building the cache key.
+                                          items:
+                                            type: string
+                                          type: array
+                                        contains:
+                                          additionalProperties:
+                                            items:
+                                              type: string
+                                            type: array
+                                          description: |-
+                                            (Map of List of String) For each header name and list of values combination, check if the request header contains any of the values provided. The presence of the request header and whether any of the values provided are contained in the request header value is used in building the cache key.
+                                            For each header name and list of values combination, check if the request header contains any of the values provided. The presence of the request header and whether any of the values provided are contained in the request header value is used in building the cache key.
+                                          type: object
+                                        excludeOrigin:
+                                          description: |-
+                                            (Boolean) Whether or not to include the origin header. A value of true will exclude the origin header in the cache key.
+                                            Whether or not to include the origin header. A value of true will exclude the origin header in the cache key.
+                                          type: boolean
+                                        include:
+                                          description: |-
+                                            (List of String) Include these cookies' names and their values.
+                                            Include these headers' names and their values.
+                                          items:
+                                            type: string
+                                          type: array
+                                      type: object
+                                    host:
+                                      description: (Attributes) Whether to use the
+                                        original host or the resolved host in the
+                                        cache key. (see below for nested schema)
+                                      properties:
+                                        resolved:
+                                          description: |-
+                                            (Boolean) Use the resolved host in the cache key. A value of true will use the resolved host, while a value or false will use the original host.
+                                            Use the resolved host in the cache key. A value of true will use the resolved host, while a value or false will use the original host.
+                                          type: boolean
+                                      type: object
+                                    queryString:
+                                      description: (Attributes) Use the presence of
+                                        parameters in the query string to build the
+                                        cache key. (see below for nested schema)
+                                      properties:
+                                        exclude:
+                                          description: (Attributes) A list of query
+                                            string parameters NOT used to build the
+                                            cache key. All parameters present in the
+                                            request but missing in this list will
+                                            be used to build the cache key. (see below
+                                            for nested schema)
+                                          properties:
+                                            all:
+                                              description: |-
+                                                (Boolean) Determines whether to exclude all query string parameters from the cache key.
+                                                Determines whether to exclude all query string parameters from the cache key.
+                                              type: boolean
+                                            list:
+                                              description: (List of String)
+                                              items:
+                                                type: string
+                                              type: array
+                                          type: object
+                                        include:
+                                          description: (List of String) Include these
+                                            cookies' names and their values.
+                                          properties:
+                                            all:
+                                              description: |-
+                                                (Boolean) Determines whether to exclude all query string parameters from the cache key.
+                                                Determines whether to include all query string parameters in the cache key.
+                                              type: boolean
+                                            list:
+                                              description: (List of String)
+                                              items:
+                                                type: string
+                                              type: array
+                                          type: object
+                                      type: object
+                                    user:
+                                      description: (Attributes) Characteristics of
+                                        the request user agent used in building the
+                                        cache key. (see below for nested schema)
+                                      properties:
+                                        deviceType:
+                                          description: |-
+                                            (Boolean) Use the user agent's device type in the cache key.
+                                            Use the user agent's device type in the cache key.
+                                          type: boolean
+                                        geo:
+                                          description: |-
+                                            (Boolean) Use the user agents's country in the cache key.
+                                            Use the user agents's country in the cache key.
+                                          type: boolean
+                                        lang:
+                                          description: |-
+                                            (Boolean) Use the user agent's language in the cache key.
+                                            Use the user agent's language in the cache key.
+                                          type: boolean
+                                      type: object
+                                  type: object
+                                ignoreQueryStringsOrder:
+                                  description: |-
+                                    (Boolean) Treat requests with the same query parameters the same, regardless of the order those query parameters are in. A value of true ignores the query strings' order.
+                                    Treat requests with the same query parameters the same, regardless of the order those query parameters are in. A value of true ignores the query strings' order.
+                                  type: boolean
+                              type: object
+                            cacheReserve:
+                              description: on plan). (see below for nested schema)
+                              properties:
+                                eligible:
+                                  description: |-
+                                    (Boolean) Determines whether cache reserve is enabled. If this is true and a request meets eligibility criteria, Cloudflare will write the resource to cache reserve.
+                                    Determines whether cache reserve is enabled. If this is true and a request meets eligibility criteria, Cloudflare will write the resource to cache reserve.
+                                  type: boolean
+                                minimumFileSize:
+                                  description: |-
+                                    (Number) The minimum file size eligible for store in cache reserve.
+                                    The minimum file size eligible for store in cache reserve.
+                                  type: number
+                              type: object
+                            content:
+                              description: |-
+                                (String) Error response content.
+                                Error response content.
+                              type: string
+                            contentType:
+                              description: |-
+                                type header to set with the response.
+                                Content-type header to set with the response.
+                              type: string
+                            cookieFields:
+                              description: (Attributes List) The cookie fields to
+                                log. (see below for nested schema)
+                              items:
+                                properties:
+                                  name:
+                                    description: |-
+                                      readable name of the ruleset.
+                                      The name of the field.
+                                    type: string
+                                type: object
+                              type: array
+                            disableApps:
+                              description: |-
+                                (Boolean) Turn off all active Cloudflare Apps.
+                                Turn off all active Cloudflare Apps.
+                              type: boolean
+                            disableRum:
+                              description: |-
+                                (Boolean) Turn off Real User Monitoring (RUM).
+                                Turn off Real User Monitoring (RUM).
+                              type: boolean
+                            disableZaraz:
+                              description: |-
+                                (Boolean) Turn off Zaraz.
+                                Turn off Zaraz.
+                              type: boolean
+                            edgeTtl:
+                              description: (Attributes) TTL (Time to Live) specifies
+                                the maximum time to cache a resource in the Cloudflare
+                                edge network. (see below for nested schema)
+                              properties:
+                                default:
+                                  description: |-
+                                    (Number) The TTL (in seconds) if you choose override_origin mode.
+                                    The TTL (in seconds) if you choose override_origin mode.
+                                  type: number
+                                mode:
+                                  description: |-
+                                    (String) Determines which browser ttl mode to use.
+                                    edge ttl options
+                                  type: string
+                                statusCodeTtl:
+                                  description: (Attributes List) List of single status
+                                    codes, or status code ranges to apply the selected
+                                    mode (see below for nested schema)
+                                  items:
+                                    properties:
+                                      statusCode:
+                                        description: |-
+                                          (Number) The status code to use for the error.
+                                          Set the ttl for responses with this specific status code
+                                        type: number
+                                      statusCodeRange:
+                                        description: (Attributes) The range of status
+                                          codes used to apply the selected mode. (see
+                                          below for nested schema)
+                                        properties:
+                                          from:
+                                            description: |-
+                                              (Number) response status code lower bound
+                                              response status code lower bound
+                                            type: number
+                                          to:
+                                            description: |-
+                                              (Number) response status code upper bound
+                                              response status code upper bound
+                                            type: number
+                                        type: object
+                                      value:
+                                        description: |-
+                                          Control header with the value "no-cache". A value of -1 is equivalent to setting Cache-Control header with the value of "no-store".
+                                          Time to cache a response (in seconds). A value of 0 is equivalent to setting the Cache-Control header with the value "no-cache". A value of -1 is equivalent to setting Cache-Control header with the value of "no-store".
+                                        type: number
+                                    type: object
+                                  type: array
+                              type: object
+                            emailObfuscation:
+                              description: |-
+                                (Boolean) Turn on or off Email Obfuscation.
+                                Turn on or off Email Obfuscation.
+                              type: boolean
+                            fonts:
+                              description: |-
+                                (Boolean) Turn on or off Cloudflare Fonts.
+                                Turn on or off Cloudflare Fonts.
+                              type: boolean
+                            fromList:
+                              description: (Attributes) Serve a redirect based on
+                                a bulk list lookup. (see below for nested schema)
+                              properties:
+                                key:
+                                  description: |-
+                                    (String) Expression that evaluates to the list lookup key.
+                                    Expression that evaluates to the list lookup key.
+                                  type: string
+                                name:
+                                  description: |-
+                                    readable name of the ruleset.
+                                    The name of the list to match against.
+                                  type: string
+                              type: object
+                            fromValue:
+                              description: (Attributes) Serve a redirect based on
+                                the request properties. (see below for nested schema)
+                              properties:
+                                preserveQueryString:
+                                  description: |-
+                                    (Boolean) Keep the query string of the original request.
+                                    Keep the query string of the original request.
+                                  type: boolean
+                                statusCode:
+                                  description: |-
+                                    (Number) The status code to use for the error.
+                                    The status code to be used for the redirect.
+                                  type: number
+                                targetUrl:
+                                  description: (Attributes) The URL to redirect the
+                                    request to. (see below for nested schema)
+                                  properties:
+                                    expression:
+                                      description: |-
+                                        (String) The expression defining which traffic will match the rule.
+                                        An expression to evaluate to get the URL to redirect the request to.
+                                      type: string
+                                    value:
+                                      description: |-
+                                        Control header with the value "no-cache". A value of -1 is equivalent to setting Cache-Control header with the value of "no-store".
+                                        The URL to redirect the request to.
+                                      type: string
+                                  type: object
+                              type: object
+                            headers:
+                              description: (Attributes Map) Map of request headers
+                                to modify. (see below for nested schema)
+                              items:
+                                properties:
+                                  expression:
+                                    description: |-
+                                      (String) The expression defining which traffic will match the rule.
+                                      Expression for the header value.
+                                    type: string
+                                  operation:
+                                    description: (String)
+                                    type: string
+                                  value:
+                                    description: |-
+                                      Control header with the value "no-cache". A value of -1 is equivalent to setting Cache-Control header with the value of "no-store".
+                                      Static value for the header.
+                                    type: string
+                                type: object
+                              type: array
+                            hostHeader:
+                              description: |-
+                                (String) Rewrite the HTTP Host header.
+                                Rewrite the HTTP Host header.
+                              type: string
+                            hotlinkProtection:
+                              description: |-
+                                (Boolean) Turn on or off the Hotlink Protection.
+                                Turn on or off the Hotlink Protection.
+                              type: boolean
+                            id:
+                              description: |-
+                                (String) The unique ID of the ruleset.
+                                The ID of the ruleset to execute.
+                              type: string
+                            increment:
+                              description: |-
+                                (Number) Increment contains the delta to change the score and can be either positive or negative.
+                                Increment contains the delta to change the score and can be either positive or negative.
+                              type: number
+                            matchedData:
+                              description: (Attributes) The configuration to use for
+                                matched data logging. (see below for nested schema)
+                              properties:
+                                publicKey:
+                                  description: |-
+                                    (String) The public key to encrypt matched data logs with.
+                                    The public key to encrypt matched data logs with.
+                                  type: string
+                              type: object
+                            mirage:
+                              description: |-
+                                (Boolean) Turn on or off Mirage.
+                                Turn on or off Mirage.
+                              type: boolean
+                            opportunisticEncryption:
+                              description: |-
+                                (Boolean) Turn on or off Opportunistic Encryption.
+                                Turn on or off Opportunistic Encryption.
+                              type: boolean
+                            origin:
+                              description: (Attributes) Override the IP/TCP destination.
+                                (see below for nested schema)
+                              properties:
+                                host:
+                                  description: |-
+                                    (Attributes) Whether to use the original host or the resolved host in the cache key. (see below for nested schema)
+                                    Override the resolved hostname.
+                                  type: string
+                                port:
+                                  description: |-
+                                    (Number) Override the destination port.
+                                    Override the destination port.
+                                  type: number
+                              type: object
+                            originCacheControl:
+                              description: |-
+                                (Boolean) When enabled, Cloudflare will aim to strictly adhere to RFC 7234.
+                                When enabled, Cloudflare will aim to strictly adhere to RFC 7234.
+                              type: boolean
+                            originErrorPagePassthru:
+                              description: |-
+                                (Boolean) Generate Cloudflare error pages from issues sent from the origin server. When on, error pages will trigger for issues from the origin
+                                Generate Cloudflare error pages from issues sent from the origin server. When on, error pages will trigger for issues from the origin
+                              type: boolean
+                            overrides:
+                              description: (Attributes) A set of overrides to apply
+                                to the target ruleset. (see below for nested schema)
+                              properties:
+                                action:
+                                  description: |-
+                                    (String) The action to perform when the rule matches.
+                                    An action to override all rules with. This option has lower precedence than rule and category overrides.
+                                  type: string
+                                categories:
+                                  description: (List of String) The categories of
+                                    the rule.
+                                  items:
+                                    properties:
+                                      action:
+                                        description: |-
+                                          (String) The action to perform when the rule matches.
+                                          The action to override rules in the category with.
+                                        type: string
+                                      category:
+                                        description: |-
+                                          (String) The name of the category to override.
+                                          The name of the category to override.
+                                        type: string
+                                      enabled:
+                                        description: |-
+                                          (Boolean) Whether the rule should be executed.
+                                          Whether to enable execution of rules in the category.
+                                        type: boolean
+                                      sensitivityLevel:
+                                        description: |-
+                                          (String) A sensitivity level to set for all rules. This option has lower precedence than rule and category overrides and is only applicable for DDoS phases.
+                                          The sensitivity level to use for rules in the category.
+                                        type: string
+                                    type: object
+                                  type: array
+                                enabled:
+                                  description: |-
+                                    (Boolean) Whether the rule should be executed.
+                                    Whether to enable execution of all rules. This option has lower precedence than rule and category overrides.
+                                  type: boolean
+                                rules:
+                                  description: (Attributes List) The list of rules
+                                    in the ruleset. (see below for nested schema)
+                                  items:
+                                    properties:
+                                      action:
+                                        description: |-
+                                          (String) The action to perform when the rule matches.
+                                          The action to override the rule with.
+                                        type: string
+                                      enabled:
+                                        description: |-
+                                          (Boolean) Whether the rule should be executed.
+                                          Whether to enable execution of the rule.
+                                        type: boolean
+                                      id:
+                                        description: |-
+                                          (String) The unique ID of the ruleset.
+                                          The ID of the rule to override.
+                                        type: string
+                                      scoreThreshold:
+                                        description: |-
+                                          (Number) The score threshold to use for the rule.
+                                          The score threshold to use for the rule.
+                                        type: number
+                                      sensitivityLevel:
+                                        description: |-
+                                          (String) A sensitivity level to set for all rules. This option has lower precedence than rule and category overrides and is only applicable for DDoS phases.
+                                          The sensitivity level to use for the rule.
+                                        type: string
+                                    type: object
+                                  type: array
+                                sensitivityLevel:
+                                  description: |-
+                                    (String) A sensitivity level to set for all rules. This option has lower precedence than rule and category overrides and is only applicable for DDoS phases.
+                                    A sensitivity level to set for all rules. This option has lower precedence than rule and category overrides and is only applicable for DDoS phases.
+                                  type: string
+                              type: object
+                            phases:
+                              description: |-
+                                (List of String) A list of phases to skip the execution of. This option is incompatible with the ruleset and rulesets options.
+                                A list of phases to skip the execution of. This option is incompatible with the ruleset and rulesets options.
+                              items:
+                                type: string
+                              type: array
+                            polish:
+                              description: |-
+                                (String) Configure the Polish level.
+                                Configure the Polish level.
+                              type: string
+                            products:
+                              description: |-
+                                (List of String) A list of legacy security products to skip the execution of.
+                                A list of legacy security products to skip the execution of.
+                              items:
+                                type: string
+                              type: array
+                            readTimeout:
+                              description: |-
+                                (Number) Define a timeout value between two successive read operations to your origin server. Historically, the timeout value between two read options from Cloudflare to an origin server is 100 seconds. If you are attempting to reduce HTTP 524 errors because of timeouts from an origin server, try increasing this timeout value.
+                                Define a timeout value between two successive read operations to your origin server. Historically, the timeout value between two read options from Cloudflare to an origin server is 100 seconds. If you are attempting to reduce HTTP 524 errors because of timeouts from an origin server, try increasing this timeout value.
+                              type: number
+                            requestFields:
+                              description: (Attributes List) The request fields to
+                                log. (see below for nested schema)
+                              items:
+                                properties:
+                                  name:
+                                    description: |-
+                                      readable name of the ruleset.
+                                      The name of the field.
+                                    type: string
+                                type: object
+                              type: array
+                            respectStrongEtags:
+                              description: |-
+                                (Boolean) Specify whether or not Cloudflare should respect strong ETag (entity tag) headers. When off, Cloudflare converts strong ETag headers to weak ETag headers.
+                                Specify whether or not Cloudflare should respect strong ETag (entity tag) headers. When off, Cloudflare converts strong ETag headers to weak ETag headers.
+                              type: boolean
+                            response:
+                              description: (Attributes) The response to show when
+                                the block is applied. (see below for nested schema)
+                              properties:
+                                content:
+                                  description: |-
+                                    (String) Error response content.
+                                    The content to return.
+                                  type: string
+                                contentType:
+                                  description: |-
+                                    type header to set with the response.
+                                    The type of the content to return.
+                                  type: string
+                                statusCode:
+                                  description: |-
+                                    (Number) The status code to use for the error.
+                                    The status code to return.
+                                  type: number
+                              type: object
+                            responseFields:
+                              description: (Attributes List) The response fields to
+                                log. (see below for nested schema)
+                              items:
+                                properties:
+                                  name:
+                                    description: |-
+                                      readable name of the ruleset.
+                                      The name of the field.
+                                    type: string
+                                type: object
+                              type: array
+                            rocketLoader:
+                              description: |-
+                                (Boolean) Turn on or off Rocket Loader
+                                Turn on or off Rocket Loader
+                              type: boolean
+                            rules:
+                              additionalProperties:
+                                items:
+                                  type: string
+                                type: array
+                              description: |-
+                                (Attributes List) The list of rules in the ruleset. (see below for nested schema)
+                                A mapping of ruleset IDs to a list of rule IDs in that ruleset to skip the execution of. This option is incompatible with the ruleset option.
+                              type: object
+                            ruleset:
+                              description: |-
+                                (String) A ruleset to skip the execution of. This option is incompatible with the rulesets, rules and phases options.
+                                A ruleset to skip the execution of. This option is incompatible with the rulesets, rules and phases options.
+                              type: string
+                            rulesets:
+                              description: |-
+                                (List of String) A list of ruleset IDs to skip the execution of. This option is incompatible with the ruleset and phases options.
+                                A list of ruleset IDs to skip the execution of. This option is incompatible with the ruleset and phases options.
+                              items:
+                                type: string
+                              type: array
+                            securityLevel:
+                              description: |-
+                                (String) Configure the Security Level.
+                                Configure the Security Level.
+                              type: string
+                            serveStale:
+                              description: (Attributes) Define if Cloudflare should
+                                serve stale content while getting the latest content
+                                from the origin. If on, Cloudflare will not serve
+                                stale content while getting the latest content from
+                                the origin. (see below for nested schema)
+                              properties:
+                                disableStaleWhileUpdating:
+                                  description: |-
+                                    (Boolean) Defines whether Cloudflare should serve stale content while updating. If true, Cloudflare will not serve stale content while getting the latest content from the origin.
+                                    Defines whether Cloudflare should serve stale content while updating. If true, Cloudflare will not serve stale content while getting the latest content from the origin.
+                                  type: boolean
+                              type: object
+                            serverSideExcludes:
+                              description: |-
+                                (Boolean) Turn on or off Server Side Excludes.
+                                Turn on or off Server Side Excludes.
+                              type: boolean
+                            sni:
+                              description: (Attributes) Override the Server Name Indication
+                                (SNI). (see below for nested schema)
+                              properties:
+                                value:
+                                  description: |-
+                                    Control header with the value "no-cache". A value of -1 is equivalent to setting Cache-Control header with the value of "no-store".
+                                    The SNI override.
+                                  type: string
+                              type: object
+                            ssl:
+                              description: |-
+                                (String) Configure the SSL level.
+                                Configure the SSL level.
+                              type: string
+                            statusCode:
+                              description: |-
+                                (Number) The status code to use for the error.
+                                The status code to use for the error.
+                              type: number
+                            sxg:
+                              description: |-
+                                (Boolean) Turn on or off Signed Exchanges (SXG).
+                                Turn on or off Signed Exchanges (SXG).
+                              type: boolean
+                            uri:
+                              description: (Attributes) URI to rewrite the request
+                                to. (see below for nested schema)
+                              properties:
+                                path:
+                                  description: (Attributes) Path portion rewrite.
+                                    (see below for nested schema)
+                                  properties:
+                                    expression:
+                                      description: |-
+                                        (String) The expression defining which traffic will match the rule.
+                                        Expression to evaluate for the replacement value.
+                                      type: string
+                                    value:
+                                      description: |-
+                                        Control header with the value "no-cache". A value of -1 is equivalent to setting Cache-Control header with the value of "no-store".
+                                        Predefined replacement value.
+                                      type: string
+                                  type: object
+                                query:
+                                  description: (Attributes) Query portion rewrite.
+                                    (see below for nested schema)
+                                  properties:
+                                    expression:
+                                      description: |-
+                                        (String) The expression defining which traffic will match the rule.
+                                        Expression to evaluate for the replacement value.
+                                      type: string
+                                    value:
+                                      description: |-
+                                        Control header with the value "no-cache". A value of -1 is equivalent to setting Cache-Control header with the value of "no-store".
+                                        Predefined replacement value.
+                                      type: string
+                                  type: object
+                              type: object
+                          type: object
+                        categories:
+                          description: |-
+                            (List of String) The categories of the rule.
+                            The categories of the rule.
+                          items:
+                            type: string
+                          type: array
+                        description:
+                          description: |-
+                            (String) An informative description of the ruleset.
+                            An informative description of the rule.
+                          type: string
+                        enabled:
+                          description: |-
+                            (Boolean) Whether the rule should be executed.
+                            Whether the rule should be executed.
+                          type: boolean
+                        exposedCredentialCheck:
+                          description: (Attributes) Configure checks for exposed credentials.
+                            (see below for nested schema)
+                          properties:
+                            passwordExpression:
+                              description: |-
+                                (String) Expression that selects the password used in the credentials check.
+                                Expression that selects the password used in the credentials check.
+                              type: string
+                            usernameExpression:
+                              description: |-
+                                (String) Expression that selects the user ID used in the credentials check.
+                                Expression that selects the user ID used in the credentials check.
+                              type: string
+                          type: object
+                        expression:
+                          description: |-
+                            (String) The expression defining which traffic will match the rule.
+                            The expression defining which traffic will match the rule.
+                          type: string
+                        id:
+                          description: |-
+                            (String) The unique ID of the ruleset.
+                            The unique ID of the rule.
+                          type: string
+                        logging:
+                          description: (Attributes) An object configuring the rule's
+                            logging behavior. (see below for nested schema)
+                          properties:
+                            enabled:
+                              description: |-
+                                (Boolean) Whether the rule should be executed.
+                                Whether to generate a log when the rule matches.
+                              type: boolean
+                          type: object
+                        ratelimit:
+                          description: (Attributes) An object configuring the rule's
+                            ratelimit behavior. (see below for nested schema)
+                          properties:
+                            characteristics:
+                              description: |-
+                                (List of String) Characteristics of the request on which the ratelimiter counter will be incremented.
+                                Characteristics of the request on which the ratelimiter counter will be incremented.
+                              items:
+                                type: string
+                              type: array
+                            countingExpression:
+                              description: |-
+                                (String) Defines when the ratelimit counter should be incremented. It is optional and defaults to the same as the rule's expression.
+                                Defines when the ratelimit counter should be incremented. It is optional and defaults to the same as the rule's expression.
+                              type: string
+                            mitigationTimeout:
+                              description: |-
+                                (Number) Period of time in seconds after which the action will be disabled following its first execution.
+                                Period of time in seconds after which the action will be disabled following its first execution.
+                              type: number
+                            period:
+                              description: |-
+                                (Number) Period in seconds over which the counter is being incremented.
+                                Period in seconds over which the counter is being incremented.
+                              type: number
+                            requestsPerPeriod:
+                              description: |-
+                                (Number) The threshold of requests per period after which the action will be executed for the first time.
+                                The threshold of requests per period after which the action will be executed for the first time.
+                              type: number
+                            requestsToOrigin:
+                              description: |-
+                                (Boolean) Defines if ratelimit counting is only done when an origin is reached.
+                                Defines if ratelimit counting is only done when an origin is reached.
+                              type: boolean
+                            scorePerPeriod:
+                              description: |-
+                                (Number) The score threshold per period for which the action will be executed the first time.
+                                The score threshold per period for which the action will be executed the first time.
+                              type: number
+                            scoreResponseHeaderName:
+                              description: |-
+                                (String) The response header name provided by the origin which should contain the score to increment ratelimit counter on.
+                                The response header name provided by the origin which should contain the score to increment ratelimit counter on.
+                              type: string
+                          type: object
+                        ref:
+                          description: |-
+                            (String) The reference of the rule (the rule ID by default).
+                            The reference of the rule (the rule ID by default).
+                          type: string
+                      type: object
+                    type: array
+                  zoneId:
+                    description: |-
+                      (String) The Zone ID to use for this endpoint. Mutually exclusive with the Account ID.
+                      The Zone ID to use for this endpoint. Mutually exclusive with the Account ID.
+                    type: string
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        LastTransitionTime is the last time this condition transitioned from one
+                        status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        A Message containing details about this condition's last transition from
+                        one status to another, if any.
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        ObservedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: |-
+                        Type of this condition. At most one of each condition type may apply to
+                        a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              observedGeneration:
+                description: |-
+                  ObservedGeneration is the latest metadata.generation
+                  which resulted in either a ready state, or stalled due to error
+                  it can not recover from without human intervention.
+                format: int64
+                type: integer
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

@@ -17,6 +17,33 @@ func (l *RoutingAddressList) GetItems() []resource.Managed {
 	return items
 }
 
+// GetItems of this RoutingCatchAllList.
+func (l *RoutingCatchAllList) GetItems() []resource.Managed {
+	items := make([]resource.Managed, len(l.Items))
+	for i := range l.Items {
+		items[i] = &l.Items[i]
+	}
+	return items
+}
+
+// GetItems of this RoutingDNSList.
+func (l *RoutingDNSList) GetItems() []resource.Managed {
+	items := make([]resource.Managed, len(l.Items))
+	for i := range l.Items {
+		items[i] = &l.Items[i]
+	}
+	return items
+}
+
+// GetItems of this RoutingRuleList.
+func (l *RoutingRuleList) GetItems() []resource.Managed {
+	items := make([]resource.Managed, len(l.Items))
+	for i := range l.Items {
+		items[i] = &l.Items[i]
+	}
+	return items
+}
+
 // GetItems of this RoutingSettingsList.
 func (l *RoutingSettingsList) GetItems() []resource.Managed {
 	items := make([]resource.Managed, len(l.Items))
