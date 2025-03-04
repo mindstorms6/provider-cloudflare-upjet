@@ -130,4 +130,4 @@ require (
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )
 
-replace github.com/crossplane/upjet => ../upjet
+replace github.com/crossplane/upjet => github.com/mindstorms6/upjet v0.0.0-20250304050505-ddf5455d5423
