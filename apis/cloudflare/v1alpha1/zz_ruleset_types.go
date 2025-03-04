@@ -1980,7 +1980,7 @@ type RulesParameters struct {
 
 	// (Attributes) The parameters configuring the rule's action. (see below for nested schema)
 	// +kubebuilder:validation:Optional
-	ActionParameters *ActionParametersParameters `json:"actionParameters,omitempty" tf:"action_parameters,omitempty"`
+	ActionParameters *ActionParametersParameters `json:"actionParameters" tf:"action_parameters,omitempty"`
 
 	// (String) An informative description of the ruleset.
 	// An informative description of the rule.
